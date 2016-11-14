@@ -1,0 +1,26 @@
+.list {
+    width: 250px;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.list-item {
+    resize: none;
+    outline: none;
+    border: 0;
+    display: block;
+    border-bottom: solid 1px #ccc;
+    border-left: solid 1px #ccc;
+    border-right: solid 1px #ccc;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.list-item:first-of-type {
+    border-top: solid 1px #ccc;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.list-item:last-of-type {
+    border-radius: 0px 0px 5px 5px;
+}

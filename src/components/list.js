@@ -3,29 +3,40 @@ import TextInput from './text-input';
 import './list.css';
 
 class List extends Component {
-    addItem(text) {
-        this.actions.addListItem()
+
+    addItem(text, index) {
+        this.props.actions.addListItem(text, index);
     }
-    saveItem(id, text, createNext, height) {
-        this.actions.saveListItem(id, text, height);
+
+    saveItem(id, text, createNext, index, height) {
+        this.props.actions.saveListItem(id, text, height);
         if (createNext) {
-            this.addItem();
+            this.addItem(null, ++index);
         }
     }
+
+    blurItem(id, text) {
+        if (!text) {
+            this.props.actions.removeListItem(id);
+        }
+    }
+
     render() {
-        console.log(Object.keys(this.props.actions));
         return (
             <div className="list">
             {
-                this.props.list.map(item => (
+                this.props.list.map((item, index) => (
                     <TextInput
                         key={item.id}
                         id={item.id}
                         text={item.text}
+                        index={index}
                         height={item.height}
                         multiline={item.multiline}
                         autoFocus={item.autoFocus}
-                        onSave={(text, createNext, height) => this.saveItem(item.id, text, createNext, height)} />
+                        onSave={(text, createNext, index, height) => this.saveItem(item.id, text, createNext, index, height)}
+                        onBlur={(text) => this.blurItem(item.id, text)}
+                    />
                         // setMultiline={(multiline) => this.props.setMultiline(item.id, multiline)} />
                 ))
             }

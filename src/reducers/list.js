@@ -7,10 +7,27 @@ const initialState = [
 const list = (state = initialState, action) => {
     switch (action.type) {
         case 'ADD_LIST_ITEM':
-            return [
-                ...state,
-                { id: 100, text: action.text }
-            ];
+            // Use slice not splice
+            state.splice(action.index, 0, { id: action.id, text: action.text });
+            return [].concat(state);
+        case 'SAVE_LIST_ITEM':
+            return state.map(item => {
+                if (item.id === action.id) {
+                    return {
+                        ...item,
+                        text: action.text,
+                        height: action.height
+                    };
+                }
+                return item;
+            });
+        case 'REMOVE_LIST_ITEM':
+            return state.map(item => {
+                if (item.id !== action.id) {
+                    return item;
+                }
+                return null;
+            });
         case 'TOGGLE_LIST_ITEM':
             return state.map(item => {
                 if (item.id === action.id) {
