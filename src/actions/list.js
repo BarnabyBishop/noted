@@ -12,12 +12,12 @@ export const saveListItem = (id, text, height) => ({
     id,
     text,
     height
-})
+});
 
 export const removeListItem = (id) => ({
     type: 'REMOVE_LIST_ITEM',
     id
-})
+});
 
 export const toggleListItem = (id) => ({
     type: 'TOGGLE_LIST_ITEM',

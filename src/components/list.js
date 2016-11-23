@@ -15,8 +15,9 @@ class List extends Component {
         }
     }
 
-    blurItem(id, text) {
+    blurItem(id, text) {        
         if (!text) {
+            console.log('no text');
             this.props.actions.removeListItem(id);
         }
     }

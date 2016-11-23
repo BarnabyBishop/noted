@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import list from './list';
+import date from './date';
 
 const reducers = combineReducers({
-  list
+  list,
+  date
 })
 
 export default reducers
