@@ -1,10 +1,11 @@
 let nextItemId = 101;
 
-export const addListItem = (text, index) => ({
+export const addListItem = (text, created, sortOrder) => ({
     type: 'ADD_LIST_ITEM',
     id: nextItemId++,
     text: text || '',
-    index
+    created,
+    sortOrder
 });
 
 export const saveListItem = (id, text, height) => ({
@@ -19,7 +20,7 @@ export const removeListItem = (id) => ({
     id
 });
 
-export const toggleListItem = (id) => ({
-    type: 'TOGGLE_LIST_ITEM',
+export const toggleChecked = (id) => ({
+    type: 'TOGGLE_CHECKED',
     id
 });

@@ -11,7 +11,7 @@ const App = ({list, currentDate, actions}) => {
     return (
         <div>
             <DatePicker currentDate={currentDate} actions={actions} />
-            <List list={list} actions={actions} />
+            <List list={list} currentDate={currentDate} actions={actions} />
         </div>
     );
 };

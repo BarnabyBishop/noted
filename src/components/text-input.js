@@ -53,7 +53,7 @@ class TextInput extends Component {
             <textarea className={
                 classnames({
                     edit: this.props.editing,
-                    'list-item': 'list-item'
+                    'list-text-input': 'list-text-input'
                 })}
                 type="text"
                 placeholder={this.props.placeholder}
