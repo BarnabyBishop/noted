@@ -43,12 +43,14 @@ var handleCompile;
 import Koa from 'koa';
 import views from 'koa-views';
 import router from './routes'
-// import Sequelize from 'sequelize';
-// const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname');
+import { assign } from 'lodash';
+import initData from './data';
+
+const dataModels = initData();
 
 const app = new Koa();
 
-Object.assign(app.context, { /* sequalize */ });
+assign(app.context, { dataModels });
 
 // Setup views
 app.use(views('./public'));
@@ -59,9 +61,10 @@ app.use(async (ctx, next) => {
   try {
     await next(); // next is now a function
   } catch (err) {
+    console.log(chalk.red('Koa reported error:'));
     ctx.body = err.name + ': ' + err.message;
-    console.error(err);
     ctx.status = err.status || 500;
+    console.error(err);
   }
 });
 
