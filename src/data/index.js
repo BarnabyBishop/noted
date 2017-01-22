@@ -2,7 +2,7 @@
 import Sequelize from 'sequelize';
 const sequelize = new Sequelize('postgres://b@localhost:5432/noted');
 
-export default async function() {
+export default function() {
     const ListItem = sequelize.define('list_item', {
         id: {
             type: Sequelize.UUID,

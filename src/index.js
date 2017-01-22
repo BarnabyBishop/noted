@@ -9,6 +9,7 @@ import './index.css';
 
 const store = createStore(
   reducer,
+  globalInitialState, // eslint-disable-line
   applyMiddleware(reduxLogger)
 );
 

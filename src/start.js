@@ -46,11 +46,11 @@ import router from './routes'
 import { assign } from 'lodash';
 import initData from './data';
 
-const dataModels = initData();
+const data = initData();
 
 const app = new Koa();
 
-assign(app.context, { dataModels });
+assign(app.context, { data });
 
 // Setup views
 app.use(views('./public'));
