@@ -42,6 +42,7 @@ var handleCompile;
 /*************************/
 import Koa from 'koa';
 import views from 'koa-views';
+import bodyParser from 'koa-bodyparser';
 import router from './routes'
 import { assign } from 'lodash';
 import initData from './data';
@@ -52,11 +53,14 @@ const app = new Koa();
 
 assign(app.context, { data });
 
+// body parser
+app.use(bodyParser());
+
 // Setup views
 app.use(views('./public'));
 
 
-// uses async arrow functions
+// basic error handling
 app.use(async (ctx, next) => {
   try {
     await next(); // next is now a function
@@ -64,7 +68,7 @@ app.use(async (ctx, next) => {
     console.log(chalk.red('Koa reported error:'));
     ctx.body = err.name + ': ' + err.message;
     ctx.status = err.status || 500;
-    console.error(err);
+    console.error(chalk.red(err));
   }
 });
 
@@ -301,9 +305,9 @@ function runDevServer(host, port, protocol) {
     console.log(chalk.cyan('Starting the development server...'));
     console.log();
 
-    if (isInteractive) {
-      openBrowser(protocol + '://' + host + ':' + DEFAULT_NODE_PORT + '/');
-    }
+    // if (isInteractive) {
+    //   openBrowser(protocol + '://' + host + ':' + DEFAULT_NODE_PORT + '/');
+    // }
   });
 }
 

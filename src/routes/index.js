@@ -1,9 +1,9 @@
 import homeRoute from './home-route';
-import awesomeRoute from './awesome-route';
+import saveListItemRoute from './save-list-item-route';
 
 const router = require('koa-router')();
 
 router.get('/', homeRoute);
-router.get('/awesome', awesomeRoute);
+router.post('/api/save-list-item', saveListItemRoute);
 
 module.exports = router;
