@@ -1,18 +1,23 @@
-let nextItemId = 101;
+import uuid from 'uuid/v4';
 
 export const addListItem = (text, created, sortOrder) => ({
     type: 'ADD_LIST_ITEM',
-    id: nextItemId++,
+    id: uuid(),
     text: text || '',
     created,
     sortOrder
 });
 
-export const saveListItem = (id, text, height) => ({
-    type: 'SAVE_LIST_ITEM',
+export const updateListItem = (id, text, height) => ({
+    type: 'UPDATE_LIST_ITEM',
     id,
     text,
     height
+});
+
+export const saveListItem = (id) => ({
+    type: 'SAVE_LIST_ITEM',
+    id
 });
 
 export const removeListItem = (id) => ({
@@ -20,7 +25,8 @@ export const removeListItem = (id) => ({
     id
 });
 
-export const toggleChecked = (id) => ({
-    type: 'TOGGLE_CHECKED',
+export const toggleCompleted = (id) => ({
+    type: 'TOGGLE_COMPLETED',
     id
 });
+

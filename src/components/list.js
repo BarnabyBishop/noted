@@ -22,25 +22,38 @@ class List extends Component {
     }
 
     saveItem(id, text, createNext, index, height) {
-        this.props.actions.saveListItem(id, text, height);
+        this.props.actions.updateListItem(id, text, height);
         if (createNext) {
             this.addNextItem(id);
         }
     }
 
-    blurItem(id, text) {        
+    blurItem(id, text) {
         if (!text) {
             this.props.actions.removeListItem(id);
+        } else {
+            this.props.actions.saveListItem(id);
         }
     }
 
-    toggleChecked(id) {
-        this.props.actions.toggleChecked(id);
+    toggleCompleted(id) {
+        this.props.actions.toggleCompleted(id);
     }
 
     getSortedList() {
-        // Sort by sort order with checked items being at the bottom of the list
-        return this.props.list.sort((a, b) => a.checked === b.checked ? a.sortOrder - b.sortOrder : (a.checked ? 1 : -1));
+        return this.props.list.sort((a, b) => {
+            if (!!a.completed === !!b.completed) {
+                // If both items are completed sort them in the order
+                // in which they were completed
+                if (a.completed) {
+                    return a.completed - b.completed;
+                }
+                // If they aren't completed sort by their sort order
+                return a.sortOrder - b.sortOrder;
+            }
+            // If they have different completed statuses sort by if they are completed or not.
+            return a.completed ? 1 : -1;
+        });
     }
 
     render() {
@@ -50,11 +63,11 @@ class List extends Component {
             {
                 sortedList.map((item, index) => (
                     <div key={`${item.id}_list-item`} className="list-item">
-                        <Checkbox 
+                        <Checkbox
                             key={`${item.id}_checkbox`}
                             htmlId={`${item.id}_checkbox`}
-                            checked={item.checked}
-                            onChange={() => this.toggleChecked(item.id)}
+                            checked={!!item.completed}
+                            onChange={() => this.toggleCompleted(item.id)}
                         />
                         <TextInput
                             key={`${item.id}_text-input`}
