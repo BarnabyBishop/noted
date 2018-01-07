@@ -63,6 +63,7 @@
     "pg": "^6.1.2",
     "pg-hstore": "^2.3.2",
     "react": "^15.3.2",
+    "react-beautiful-dnd": "^3.0.0",
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.5",
     "redux": "^3.6.0",

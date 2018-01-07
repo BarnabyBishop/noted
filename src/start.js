@@ -74,8 +74,10 @@ app.use(async (ctx, next) => {
 
 app.use(router.routes());
 
-app.listen(DEFAULT_NODE_PORT);
-
+app.listen(DEFAULT_NODE_PORT, () => {
+  console.log(chalk.green(`Server listening on ${DEFAULT_NODE_PORT}.`));
+  startClient();
+});
 /*************************/
 /*** Initialise client ***/
 /*************************/
@@ -119,10 +121,7 @@ function setupCompiler(host, port, protocol) {
       console.log();
       console.log('The app is running at:');
       console.log();
-      console.log('  ' + chalk.cyan(protocol + '://' + host + ':' + port + '/'));
-      console.log();
-      console.log('Note that the development build is not optimized.');
-      console.log('To create a production build, use ' + chalk.cyan(cli + ' run build') + '.');
+      console.log('  ' + chalk.cyan(protocol + '://' + host + ':' + DEFAULT_NODE_PORT + '/'));
       console.log();
       isFirstCompile = false;
     }
@@ -320,28 +319,30 @@ function run(port) {
 
 // We attempt to use the default port but if it is busy, we offer the user to
 // run on a different port. `detect()` Promise resolves to the next free port.
-detect(DEFAULT_WEBPACK_PORT).then(port => {
-  if (port === DEFAULT_WEBPACK_PORT) {
-    run(port);
-    return;
-  }
+function startClient() {
+  detect(DEFAULT_WEBPACK_PORT).then(port => {
+    if (port === DEFAULT_WEBPACK_PORT) {
+      run(port);
+      return;
+    }
 
-  if (isInteractive) {
-    clearConsole();
-    var existingProcess = getProcessForPort(DEFAULT_WEBPACK_PORT);
-    var question =
-      chalk.yellow('Something is already running on port ' + DEFAULT_WEBPACK_PORT + '.' +
-        ((existingProcess) ? ' Probably:\n  ' + existingProcess : '')) +
-        '\n\nWould you like to run the app on another port instead?';
+    if (isInteractive) {
+      clearConsole();
+      var existingProcess = getProcessForPort(DEFAULT_WEBPACK_PORT);
+      var question =
+        chalk.yellow('Something is already running on port ' + DEFAULT_WEBPACK_PORT + '.' +
+          ((existingProcess) ? ' Probably:\n  ' + existingProcess : '')) +
+          '\n\nWould you like to run the app on another port instead?';
 
-    prompt(question, true).then(shouldChangePort => {
-      if (shouldChangePort) {
-        run(port);
-      }
-    });
-  } else {
-    console.log(chalk.red('Something is already running on port ' + DEFAULT_WEBPACK_PORT + '.'));
-  }
-});
+      prompt(question, true).then(shouldChangePort => {
+        if (shouldChangePort) {
+          run(port);
+        }
+      });
+    } else {
+      console.log(chalk.red('Something is already running on port ' + DEFAULT_WEBPACK_PORT + '.'));
+    }
+  });
+}
 
 

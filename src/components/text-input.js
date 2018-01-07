@@ -29,7 +29,7 @@ class TextInput extends Component {
 
         const style = window.getComputedStyle(input, null);
         const heightOffset = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth) - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
-        
+
         const originalHeight = style.height;
         input.style.height = 'auto';
 
