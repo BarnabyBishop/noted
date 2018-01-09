@@ -3,32 +3,33 @@ import classnames from 'classnames';
 
 class TextInput extends Component {
     handleSubmit(e) {
-        const text = e.target.value.trim();
+        const title = e.target.value.trim();
         if (e.which === 13) {
             if (e.shiftKey || e.metaKey) {
                 if (!this.props.multiline) {
                     // this.props.setMultiline(true);
-                }
-                else {
+                } else {
                     e.preventDefault();
-                    this.props.onSave(text, true, this.props.index, this.props.height);
+                    this.props.onSave(title, true, this.props.index, this.props.height);
                 }
-            }
-            else {
+            } else {
                 if (!this.props.multiline) {
                     e.preventDefault();
-                    this.props.onSave(text, true, this.props.index, this.props.height);
+                    this.props.onSave(title, true, this.props.index, this.props.height);
                 }
             }
         }
-
     }
 
     handleChange(e) {
         const input = e.target;
 
         const style = window.getComputedStyle(input, null);
-        const heightOffset = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth) - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom);
+        const heightOffset =
+            parseFloat(style.borderTopWidth) +
+            parseFloat(style.borderBottomWidth) -
+            parseFloat(style.paddingTop) -
+            parseFloat(style.paddingBottom);
 
         const originalHeight = style.height;
         input.style.height = 'auto';
@@ -50,8 +51,8 @@ class TextInput extends Component {
         }
         const autoFocus = !this.props.text;
         return (
-            <textarea className={
-                classnames({
+            <textarea
+                className={classnames({
                     edit: this.props.editing,
                     'list-text-input': 'list-text-input'
                 })}
@@ -61,9 +62,11 @@ class TextInput extends Component {
                 value={this.props.text}
                 onChange={this.handleChange.bind(this)}
                 onKeyDown={this.handleSubmit.bind(this)}
+                onFocus={this.props.onFocus}
                 onBlur={this.handleBlur.bind(this)}
                 style={style}
-                rows="1" />
+                rows="1"
+            />
         );
     }
 }

@@ -2,7 +2,7 @@
 import Sequelize from 'sequelize';
 const sequelize = new Sequelize('postgres://b@localhost:5432/noted');
 
-export default function() {
+export default () => {
     const ListItem = sequelize.define('list_item', {
         id: {
             type: Sequelize.UUID,
@@ -11,7 +11,7 @@ export default function() {
         },
         sortOrder: {
             type: Sequelize.INTEGER,
-            field: "sort_order"
+            field: 'sort_order'
         },
         created: {
             type: Sequelize.DATE
@@ -19,8 +19,11 @@ export default function() {
         completed: {
             type: Sequelize.DATE
         },
+        title: {
+            type: Sequelize.TEXT
+        },
         text: {
-            type: Sequelize.STRING
+            type: Sequelize.TEXT
         },
         height: {
             type: Sequelize.INTEGER
@@ -28,7 +31,7 @@ export default function() {
     });
 
     // // force: true will drop the table if it already exists
-    // await ListItem.sync({force: false});
+    // await ListItem.sync({ force: false });
 
     // // Create initial data
     // await ListItem.bulkCreate([
@@ -44,5 +47,4 @@ export default function() {
     // console.log(chalk.green(`${listItems.length} list items created`));
 
     return { ListItem };
-}
-
+};

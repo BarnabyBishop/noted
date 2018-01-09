@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import list from './list';
-import date from './date';
+import app from './app';
 
 const reducers = combineReducers({
-  list,
-  date
-})
+    list,
+    app
+});
 
-export default reducers
+export default reducers;
