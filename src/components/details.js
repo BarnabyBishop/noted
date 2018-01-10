@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-// import SimpleMDE from 'SimpleMDE';
+import SimpleMDE from 'simplemde';
+// import './simplemde.css';
 import './details.css';
 
 class Details extends Component {
@@ -7,33 +8,47 @@ class Details extends Component {
         super(props);
         this.textElement = null;
         this.simpleMDE = null;
+        this.id = null;
     }
+
     componentDidMount() {
-        // this.simpleMDE = new SimpleMDE({ element: this.textElement });
+        this.createEditor();
     }
 
-    handleChange(id, text) {
-        this.props.actions.updateListItemText(id, text);
+    componentDidUpdate(prevProps) {
+        const { selectedListItem } = this.props;
+        const prevSelectedListItem = prevProps.selectedListItem;
+        if ((selectedListItem && !prevSelectedListItem) || selectedListItem.id !== prevSelectedListItem.id) {
+            this.id = selectedListItem.id;
+            this.simpleMDE.value(selectedListItem.text || '');
+        }
     }
 
-    handleBlur(id) {
-        this.props.actions.saveListItem(id);
+    createEditor() {
+        this.simpleMDE = new SimpleMDE({ element: this.textElement, spellChecker: false });
+        this.simpleMDE.codemirror.on('change', this.handleChange.bind(this));
+        this.simpleMDE.codemirror.on('blur', this.handleBlur.bind(this));
+    }
+
+    handleChange() {
+        const currentValue = this.props.selectedListItem.text;
+        const newValue = this.simpleMDE.value();
+        if (currentValue !== newValue) {
+            this.props.actions.updateListItemText(this.id, this.simpleMDE.value());
+        }
+    }
+
+    handleBlur() {
+        this.props.actions.saveListItem(this.id);
     }
 
     render() {
-        const { selectedListItem } = this.props;
-        const value = selectedListItem && selectedListItem.text ? selectedListItem.text : '';
         return (
             <div className="details">
                 <textarea
                     ref={textElement => {
                         this.textElement = textElement;
                     }}
-                    className="details-text"
-                    value={value}
-                    onChange={e => this.handleChange(selectedListItem.id, e.target.value)}
-                    onBlur={() => this.handleBlur(selectedListItem.id)}
-                    rows="30"
                 />
             </div>
         );
