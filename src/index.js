@@ -9,14 +9,14 @@ import saveListItem from './middleware/save-list-item';
 import './index.css';
 
 const store = createStore(
-  reducer,
-  globalInitialState, // eslint-disable-line
-  applyMiddleware(reduxLogger, saveListItem)
+    reducer,
+    globalInitialState, // eslint-disable-line
+    applyMiddleware(reduxLogger, saveListItem)
 );
 
 render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-)
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById('root')
+);

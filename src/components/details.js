@@ -1,7 +1,17 @@
 import React, { Component } from 'react';
+// import SimpleMDE from 'SimpleMDE';
 import './details.css';
 
 class Details extends Component {
+    constructor(props) {
+        super(props);
+        this.textElement = null;
+        this.simpleMDE = null;
+    }
+    componentDidMount() {
+        // this.simpleMDE = new SimpleMDE({ element: this.textElement });
+    }
+
     handleChange(id, text) {
         this.props.actions.updateListItemText(id, text);
     }
@@ -16,6 +26,9 @@ class Details extends Component {
         return (
             <div className="details">
                 <textarea
+                    ref={textElement => {
+                        this.textElement = textElement;
+                    }}
                     className="details-text"
                     value={value}
                     onChange={e => this.handleChange(selectedListItem.id, e.target.value)}

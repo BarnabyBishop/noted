@@ -76,12 +76,13 @@ app.use(router.routes());
 
 app.listen(DEFAULT_NODE_PORT, () => {
     console.log(chalk.green(`Server listening on ${DEFAULT_NODE_PORT}.`));
-    startClient();
+    // startClient();
 });
 /*************************/
 /*** Initialise client ***/
 /*************************/
 function setupCompiler(host, port, protocol) {
+    console.log('setupCompiler');
     // "Compiler" is a low-level interface to Webpack.
     // It lets us listen to some events and provide our own custom messages.
     compiler = webpack(config, handleCompile);
@@ -261,12 +262,13 @@ function addMiddleware(devServer) {
 }
 
 function runDevServer(host, port, protocol) {
+    console.log('runDevServer');
     var devServer = new WebpackDevServer(compiler, {
         // Enable gzip compression of generated files.
         compress: true,
         // Silence WebpackDevServer's own logs since they're generally not useful.
         // It will still show compile warnings and errors with this setting.
-        clientLogLevel: 'none',
+        // clientLogLevel: 'none',
         // By default WebpackDevServer serves physical files from current directory
         // in addition to all the virtual build products that it serves from memory.
         // This is confusing because those files won’t automatically be available in
@@ -287,13 +289,13 @@ function runDevServer(host, port, protocol) {
         // updated. The WebpackDevServer client is included as an entry point
         // in the Webpack development configuration. Note that only changes
         // to CSS are currently hot reloaded. JS changes will refresh the browser.
-        hot: true,
+        hot: false,
         // It is important to tell WebpackDevServer to use the same "root" path
         // as we specified in the config. In development, we always serve from /.
         publicPath: config.output.publicPath,
         // WebpackDevServer is noisy by default so we emit custom message instead
         // by listening to the compiler events with `compiler.plugin` calls above.
-        quiet: true,
+        quiet: false,
         // Reportedly, this avoids CPU overload on some systems.
         // https://github.com/facebookincubator/create-react-app/issues/293
         watchOptions: {
@@ -326,6 +328,7 @@ function runDevServer(host, port, protocol) {
 }
 
 function run(port) {
+    console.log('Running');
     var protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     var host = process.env.HOST || 'localhost';
     setupCompiler(host, port, protocol);
@@ -334,31 +337,33 @@ function run(port) {
 
 // We attempt to use the default port but if it is busy, we offer the user to
 // run on a different port. `detect()` Promise resolves to the next free port.
-function startClient() {
-    detect(DEFAULT_WEBPACK_PORT).then(port => {
-        if (port === DEFAULT_WEBPACK_PORT) {
-            run(port);
-            return;
-        }
+// function startClient() {
+console.log('Starting client');
+detect(DEFAULT_WEBPACK_PORT).then(port => {
+    console.log('Starting detected');
+    if (port === DEFAULT_WEBPACK_PORT) {
+        run(port);
+        return;
+    }
 
-        if (isInteractive) {
-            clearConsole();
-            var existingProcess = getProcessForPort(DEFAULT_WEBPACK_PORT);
-            var question =
-                chalk.yellow(
-                    'Something is already running on port ' +
-                        DEFAULT_WEBPACK_PORT +
-                        '.' +
-                        (existingProcess ? ' Probably:\n  ' + existingProcess : '')
-                ) + '\n\nWould you like to run the app on another port instead?';
+    if (isInteractive) {
+        clearConsole();
+        var existingProcess = getProcessForPort(DEFAULT_WEBPACK_PORT);
+        var question =
+            chalk.yellow(
+                'Something is already running on port ' +
+                    DEFAULT_WEBPACK_PORT +
+                    '.' +
+                    (existingProcess ? ' Probably:\n  ' + existingProcess : '')
+            ) + '\n\nWould you like to run the app on another port instead?';
 
-            prompt(question, true).then(shouldChangePort => {
-                if (shouldChangePort) {
-                    run(port);
-                }
-            });
-        } else {
-            console.log(chalk.red('Something is already running on port ' + DEFAULT_WEBPACK_PORT + '.'));
-        }
-    });
-}
+        prompt(question, true).then(shouldChangePort => {
+            if (shouldChangePort) {
+                run(port);
+            }
+        });
+    } else {
+        console.log(chalk.red('Something is already running on port ' + DEFAULT_WEBPACK_PORT + '.'));
+    }
+});
+// }
