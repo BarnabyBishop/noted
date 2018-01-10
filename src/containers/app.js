@@ -12,8 +12,10 @@ const App = ({ list, currentDate, selectedListItem, actions }) => {
     return (
         <div>
             <DatePicker currentDate={currentDate} actions={actions} />
-            <List list={list} currentDate={currentDate} actions={actions} />
-            <Details selectedListItem={selectedListItem} actions={actions} />
+            <div className="content">
+                <List list={list} currentDate={currentDate} actions={actions} />
+                <Details selectedListItem={selectedListItem} actions={actions} />
+            </div>
         </div>
     );
 };

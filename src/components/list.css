@@ -1,8 +1,8 @@
 .list {
     width: 250px;
-    margin-top: 5px;
-    margin-left: 5px;
+    margin: 5px;
     display: inline-block;
+    vertical-align: top;
 }
 
 .list-item {
