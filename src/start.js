@@ -82,7 +82,6 @@ app.listen(DEFAULT_NODE_PORT, () => {
 /*** Initialise client ***/
 /*************************/
 function setupCompiler(host, port, protocol) {
-    console.log('setupCompiler');
     // "Compiler" is a low-level interface to Webpack.
     // It lets us listen to some events and provide our own custom messages.
     compiler = webpack(config, handleCompile);
@@ -262,7 +261,7 @@ function addMiddleware(devServer) {
 }
 
 function runDevServer(host, port, protocol) {
-    console.log('runDevServer');
+    console.log(host, port, protocol);
     var devServer = new WebpackDevServer(compiler, {
         // Enable gzip compression of generated files.
         compress: true,
@@ -289,13 +288,13 @@ function runDevServer(host, port, protocol) {
         // updated. The WebpackDevServer client is included as an entry point
         // in the Webpack development configuration. Note that only changes
         // to CSS are currently hot reloaded. JS changes will refresh the browser.
-        hot: false,
+        hot: true,
         // It is important to tell WebpackDevServer to use the same "root" path
         // as we specified in the config. In development, we always serve from /.
         publicPath: config.output.publicPath,
         // WebpackDevServer is noisy by default so we emit custom message instead
         // by listening to the compiler events with `compiler.plugin` calls above.
-        quiet: false,
+        quiet: true,
         // Reportedly, this avoids CPU overload on some systems.
         // https://github.com/facebookincubator/create-react-app/issues/293
         watchOptions: {
@@ -328,7 +327,6 @@ function runDevServer(host, port, protocol) {
 }
 
 function run(port) {
-    console.log('Running');
     var protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     var host = process.env.HOST || 'localhost';
     setupCompiler(host, port, protocol);
@@ -338,9 +336,7 @@ function run(port) {
 // We attempt to use the default port but if it is busy, we offer the user to
 // run on a different port. `detect()` Promise resolves to the next free port.
 // function startClient() {
-console.log('Starting client');
 detect(DEFAULT_WEBPACK_PORT).then(port => {
-    console.log('Starting detected');
     if (port === DEFAULT_WEBPACK_PORT) {
         run(port);
         return;
