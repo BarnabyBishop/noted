@@ -9,6 +9,8 @@ export async function saveListItem(listItem) {
     if (response.status >= 400) {
         throw new Error('Bad response from server');
     }
+    const savedListItem = await response.json();
+    return savedListItem;
 }
 
 export async function getList() {

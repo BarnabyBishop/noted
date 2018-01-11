@@ -8,6 +8,7 @@ const list = (state = [], action) => {
                     dirty: true,
                     text: action.text,
                     created: action.created,
+                    completed: null,
                     sortOrder: action.sortOrder
                 }
             ];
@@ -65,7 +66,8 @@ const list = (state = [], action) => {
                     return {
                         ...item,
                         dirty: false,
-                        saving: false
+                        saving: false,
+                        updatedAt: action.item.updatedAt
                     };
                 }
                 return item;

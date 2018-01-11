@@ -5,11 +5,11 @@ export default async function(ctx, next) {
         throw new Error('You must provide an ID.');
     }
 
+    // Save ListItem
     const { data } = ctx;
-    const listItem = await data.ListItem.upsert(
-        { id, title, text, height, sortOrder, created, completed },
-        { where: { id } }
-    );
+    await data.ListItem.upsert({ id, title, text, height, sortOrder, created, completed }, { where: { id } });
 
+    // Load updated/inserted ListItem
+    const listItem = await data.ListItem.findById(id);
     ctx.body = listItem;
 }

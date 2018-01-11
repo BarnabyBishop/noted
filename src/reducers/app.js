@@ -1,6 +1,6 @@
 /* General app state */
 const initialState = {
-    currentDate: new Date(),
+    currentDate: new Date().toISOString(),
     selectedListItemId: null
 };
 

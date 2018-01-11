@@ -12,3 +12,14 @@
     font-size: 12pt;
     padding: 10px;
 }
+
+.information {
+    color: #999;
+    font-size: 8pt;
+    margin-top: 5px;
+}
+
+.markdown-help {
+    text-decoration: none;
+    color: #999;
+}

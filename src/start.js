@@ -75,7 +75,7 @@ app.use(async (ctx, next) => {
 app.use(router.routes());
 
 app.listen(DEFAULT_NODE_PORT, () => {
-    console.log(chalk.green(`Server listening on ${DEFAULT_NODE_PORT}.`));
+    console.log(chalk.green(`API server listening on ${DEFAULT_NODE_PORT}.`));
     // startClient();
 });
 /*************************/
@@ -121,7 +121,7 @@ function setupCompiler(host, port, protocol) {
             console.log();
             console.log('The app is running at:');
             console.log();
-            console.log('  ' + chalk.cyan(protocol + '://' + host + ':' + DEFAULT_NODE_PORT + '/'));
+            console.log('  ' + chalk.cyan(protocol + '://' + host + ':' + DEFAULT_WEBPACK_PORT + '/'));
             console.log();
             isFirstCompile = false;
         }
@@ -261,7 +261,6 @@ function addMiddleware(devServer) {
 }
 
 function runDevServer(host, port, protocol) {
-    console.log(host, port, protocol);
     var devServer = new WebpackDevServer(compiler, {
         // Enable gzip compression of generated files.
         compress: true,
