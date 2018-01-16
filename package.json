@@ -2,6 +2,7 @@
     "name": "noted",
     "version": "0.1.0",
     "private": true,
+    "main": "start-electron.js",
     "devDependencies": {
         "autoprefixer": "6.5.1",
         "babel-core": "6.17.0",
@@ -73,9 +74,12 @@
         "uuid": "^3.0.1"
     },
     "scripts": {
-        "start": "nodemon src/start.js --exec babel-node",
-        "build": "node src/build.js",
-        "test": "node scripts/test.js --env=jsdom"
+        "start": "NODE_ENV='development' nodemon src/start-dev.js --exec babel-node",
+        "build-client": "node src/build.js",
+        "build-server": "NODE_ENV='production' babel src/server --out-dir build/server",
+        "build": "npm run build-client && npm run build-server",
+        "test": "node scripts/test.js --env=jsdom",
+        "app": "npm run build-client && npm run build-server && electron ."
     },
     "eslintConfig": {
         "extends": "react-app"
