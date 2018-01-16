@@ -7,11 +7,15 @@
 
 .list-item {
     display: block;
-    border-bottom: solid 1px #ccc;
-    border-left: solid 1px #ccc;
-    border-right: solid 1px #ccc;
+    border: solid 1px #ccc;
     padding: 10px 10px 10px 8px;
     background-color: #fff;
+    margin-top: -1px;
+}
+
+.list-item--selected {
+    border-left: solid 2px #52bdff;
+    padding-left: 7px;
 }
 
 .list-item-container:first-of-type .list-item {
@@ -97,4 +101,18 @@
 
 .list-item.list-item--completed .list-text-input {
     color: #888;
+}
+
+.list-info {
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.list-info .info-details {
+    display: none;
+}
+
+.list-info-visible .info-details {
+    display: block;
+    font-family: monospace;
 }

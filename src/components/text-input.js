@@ -2,6 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
 
 class TextInput extends Component {
+    constructor(props) {
+        super(props);
+        this.autosave = null;
+    }
     handleSubmit(e) {
         const title = e.target.value.trim();
         if (e.which === 13) {
@@ -10,12 +14,12 @@ class TextInput extends Component {
                     // this.props.setMultiline(true);
                 } else {
                     e.preventDefault();
-                    this.props.onSave(title, true, this.props.index, this.props.height);
+                    this.props.onChange(title, true, this.props.index, this.props.height);
                 }
             } else {
                 if (!this.props.multiline) {
                     e.preventDefault();
-                    this.props.onSave(title, true, this.props.index, this.props.height);
+                    this.props.onChange(title, true, this.props.index, this.props.height);
                 }
             }
         }
@@ -23,6 +27,7 @@ class TextInput extends Component {
 
     handleChange(e) {
         const input = e.target;
+        const value = input.value;
 
         const style = window.getComputedStyle(input, null);
         const heightOffset =
@@ -37,11 +42,20 @@ class TextInput extends Component {
         const endHeight = input.scrollHeight + heightOffset;
         input.style.height = originalHeight;
 
-        this.props.onSave(e.target.value, false, this.props.index, endHeight);
+        this.props.onChange(value, false, this.props.index, endHeight);
+
+        clearTimeout(this.autosave);
+        if (value) {
+            this.autosave = setTimeout(this.save.bind(this, value), 1000);
+        }
     }
 
     handleBlur(e) {
-        this.props.onBlur(e.target.value);
+        this.save(e.target.value);
+    }
+
+    save(value) {
+        this.props.onSave(value);
     }
 
     render() {
@@ -50,6 +64,7 @@ class TextInput extends Component {
             style = { height: this.props.height + 'px' };
         }
         const autoFocus = !this.props.text;
+        const text = this.props.text === null ? '' : this.props.text;
         return (
             <textarea
                 className={classnames({
@@ -59,7 +74,7 @@ class TextInput extends Component {
                 type="text"
                 placeholder={this.props.placeholder}
                 autoFocus={autoFocus}
-                value={this.props.text}
+                value={text}
                 onChange={this.handleChange.bind(this)}
                 onKeyDown={this.handleSubmit.bind(this)}
                 onFocus={this.props.onFocus}

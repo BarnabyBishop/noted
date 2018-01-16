@@ -8,6 +8,12 @@ import Checkbox from './checkbox';
 import './list.css';
 
 class List extends Component {
+    constructor(params) {
+        super(params);
+        this.state = {
+            infoVisible: false
+        }
+    }
     addItem(title, index) {
         const { actions, currentDate } = this.props;
         actions.addListItem(title, currentDate, index);
@@ -18,11 +24,11 @@ class List extends Component {
         const currentItem = _.find(sortedList, { id });
         const currentIndex = sortedList.indexOf(currentItem);
         const nextItem = sortedList[currentIndex + 1];
-        const middleIndex = getMiddleSortOrder(currentItem.sortOrder, nextItem.sortOrder);
+        const middleIndex = getMiddleSortOrder(currentItem && currentItem.sortOrder, nextItem && nextItem.sortOrder);
         this.addItem(null, middleIndex);
     }
 
-    saveItem(id, title, createNext, index, height) {
+    updateItem(id, title, createNext, index, height) {
         this.props.actions.updateListItem(id, title, height);
         if (createNext) {
             this.addNextItem(id);
@@ -33,7 +39,7 @@ class List extends Component {
         this.props.actions.setSelectedListItem(id);
     }
 
-    blurItem(id, title) {
+    saveItem(id, title) {
         if (!title) {
             this.props.actions.removeListItem(id);
         } else {
@@ -67,12 +73,17 @@ class List extends Component {
         if (!result.destination) {
             return;
         }
-
+        console.log('result.destination.index', result.destination.index);
+        const sourceIndex = result.source.index;
+        const destinationIndex = result.destination.index
+        const movingUp = sourceIndex - destinationIndex > 0;
+        const prevIndex = movingUp ? destinationIndex - 1 : destinationIndex;
+        const nextIndex = movingUp ? destinationIndex : destinationIndex + 1;
         const sortedList = this.getSortedList();
-        const currentItem = sortedList[result.source.index];
+        const currentItem = sortedList[sourceIndex];
         const currentId = currentItem.id;
-        const newPositionItem = sortedList[result.destination.index];
-        const nextPositionItem = sortedList[result.destination.index + 1];
+        const newPositionItem = sortedList[prevIndex];
+        const nextPositionItem = sortedList[nextIndex];
         const middleSortOrder = getMiddleSortOrder(
             newPositionItem && newPositionItem.sortOrder,
             nextPositionItem && nextPositionItem.sortOrder
@@ -81,26 +92,34 @@ class List extends Component {
         this.props.actions.saveListItem(currentId);
     }
 
+    toggleInfo() {
+        this.setState({ infoVisible: !this.state.infoVisible });
+    }
+
     render() {
         const sortedList = this.getSortedList();
+        const { selectedListItem } = this.props;
         return (
             <DragDropContext onDragEnd={this.onDragEnd.bind(this)}>
                 <Droppable droppableId="droppable">
                     {(provided, snapshot) => (
                         <div className="list" ref={provided.innerRef}>
                             {sortedList.map((item, index) => (
-                                <Draggable key={item.id} draggableId={item.id}>
+                                <Draggable key={item.id} draggableId={item.id} index={index}>
                                     {(provided, snapshot) => (
                                         <div className="list-item-container">
                                             <div
                                                 ref={provided.innerRef}
+                                                style={provided.draggableStyle}
                                                 key={`${item.id}_list-item`}
                                                 className={classnames({
                                                     'list-item': 'list-item',
                                                     'list-item--saving': item.saving,
-                                                    'list-item--completed': item.completed
+                                                    'list-item--completed': item.completed,
+                                                    'list-item--selected':
+                                                        selectedListItem && selectedListItem.id === item.id
                                                 })}
-                                                style={provided.draggableStyle}
+                                                {...provided.draggableProps}
                                                 {...provided.dragHandleProps}
                                             >
                                                 <Checkbox
@@ -117,10 +136,10 @@ class List extends Component {
                                                     height={item.height}
                                                     multiline={item.multiline}
                                                     autoFocus={item.autoFocus}
-                                                    onSave={(title, createNext, index, height) =>
-                                                        this.saveItem(item.id, title, createNext, index, height)
+                                                    onChange={(title, createNext, index, height) =>
+                                                        this.updateItem(item.id, title, createNext, index, height)
                                                     }
-                                                    onBlur={title => this.blurItem(item.id, title)}
+                                                    onSave={title => this.saveItem(item.id, title)}
                                                     onFocus={this.focusItem.bind(this, item.id)}
                                                 />
                                             </div>
@@ -130,6 +149,7 @@ class List extends Component {
                                 </Draggable>
                             ))}
                             {provided.placeholder}
+                            <div className={classnames({ 'list-info': true, 'list-info-visible': this.state.infoVisible })} onClick={this.toggleInfo.bind(this)}>¿<div className="info-details">{JSON.stringify(sortedList)}</div></div>
                         </div>
                     )}
                 </Droppable>

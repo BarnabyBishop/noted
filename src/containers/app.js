@@ -13,7 +13,7 @@ const App = ({ list, currentDate, selectedListItem, actions }) => {
         <div>
             <DatePicker currentDate={currentDate} actions={actions} />
             <div className="content">
-                <List list={list} currentDate={currentDate} actions={actions} />
+                <List list={list} currentDate={currentDate} selectedListItem={selectedListItem} actions={actions} />
                 <Details selectedListItem={selectedListItem} actions={actions} />
             </div>
         </div>
