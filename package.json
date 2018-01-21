@@ -79,15 +79,21 @@
         "build-server": "NODE_ENV='production' babel src/server --out-dir build/server",
         "build": "npm run build-client && npm run build-server",
         "test": "node scripts/test.js --env=jsdom",
-        "app": "npm run build-client && npm run build-server && electron ."
+        "electron": "npm run build-client && npm run build-server && electron ."
     },
     "eslintConfig": {
         "extends": "react-app"
     },
     "jest": {
-        "collectCoverageFrom": ["src/**/*.{js,jsx}"],
-        "setupFiles": ["<rootDir>/config/polyfills.js"],
-        "testPathIgnorePatterns": ["<rootDir>[/\\\\](build|docs|node_modules)[/\\\\]"],
+        "collectCoverageFrom": [
+            "src/**/*.{js,jsx}"
+        ],
+        "setupFiles": [
+            "<rootDir>/config/polyfills.js"
+        ],
+        "testPathIgnorePatterns": [
+            "<rootDir>[/\\\\](build|docs|node_modules)[/\\\\]"
+        ],
         "testEnvironment": "node",
         "testURL": "http://localhost",
         "transform": {
@@ -95,13 +101,17 @@
             "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
             "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
         },
-        "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"],
+        "transformIgnorePatterns": [
+            "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
+        ],
         "moduleNameMapper": {
             "^react-native$": "react-native-web"
         }
     },
     "babel": {
-        "presets": ["react-app"]
+        "presets": [
+            "react-app"
+        ]
     },
     "proxy": "http://localhost:4000"
 }

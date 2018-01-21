@@ -1,7 +1,9 @@
 require('isomorphic-fetch');
 
+const apiDomain = 'http://localhost:4000';
+
 export async function saveListItem(listItem) {
-    const response = await fetch('/api/save-list-item', {
+    const response = await fetch(`${apiDomain}/api/save-list-item`, {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(listItem)
@@ -14,7 +16,7 @@ export async function saveListItem(listItem) {
 }
 
 export async function getList() {
-    const response = await fetch('/api/get-list');
+    const response = await fetch(`${apiDomain}/api/get-list`);
     if (response.status >= 400) {
         throw new Error('Bad response from server');
     }
