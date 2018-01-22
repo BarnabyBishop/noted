@@ -14,11 +14,14 @@ import auth from './middleware/auth';
 
 module.exports = () => {
     const DEFAULT_NODE_PORT = process.env.NODE_PORT || 4000;
-    const data = initData();
+    const data = initData(process.env.DB_HOST);
 
     const app = new Koa();
 
-    assign(app.context, { data });
+    Object.assign(app.context, {
+        data,
+        authToken: process.env.AUTH_TOKEN
+    });
 
     // body parser
     app.use(bodyParser());
