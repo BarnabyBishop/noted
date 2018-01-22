@@ -10,7 +10,7 @@ export default store => next => async action => {
     next(action);
 
     // Only save an item if it has changed (dirty) and has some title or text filled in
-    if (listItem && listItem.dirty && listItem.title && listItem.text) {
+    if (listItem && listItem.dirty && (listItem.title || listItem.text)) {
         next({ type: 'SAVING_LIST_ITEM', id: action.id });
         const savedListItem = await saveListItem(listItem);
         return next({ type: 'SAVED_LIST_ITEM', id: action.id, item: savedListItem });
