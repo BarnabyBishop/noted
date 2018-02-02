@@ -22,11 +22,11 @@ class DatePicker extends Component {
         return (
             <div className="date-picker">
                 <div className="prev" onClick={this.previous.bind(this)}>
-                    👈
+                    <i className="fas fa-arrow-left"></i>
                 </div>
                 <div>{currentDate.format("ddd, Do MMM")}</div>
                 <div className="next" onClick={this.next.bind(this)}>
-                    👉
+                    <i className="fas fa-arrow-right"></i>
                 </div>
             </div>
         );

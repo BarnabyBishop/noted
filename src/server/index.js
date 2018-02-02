@@ -13,7 +13,7 @@ import error from './middleware/error';
 import auth from './middleware/auth';
 
 module.exports = () => {
-    const DEFAULT_NODE_PORT = process.env.NODE_PORT || 4000;
+    const DEFAULT_NODE_PORT = process.env.NODE_PORT || 4321;
     const data = initData(process.env.DB_HOST);
 
     const app = new Koa();

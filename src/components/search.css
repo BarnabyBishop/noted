@@ -1,0 +1,20 @@
+.search {
+    display: inline-block;
+    padding-left: 16px;
+}
+
+.search .fa-search {
+    color: #bbb;
+    font-size: 14pt;
+    margin-left: -35px;
+}
+
+.search--input {
+    width: 400px;
+    height: 30px;
+    border: solid 1px #ccc;
+    border-radius: 5px;
+    padding-left: 10px;
+    font-size: 12pt;
+}
+

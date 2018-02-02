@@ -5,15 +5,19 @@ import moment from 'moment';
 import DatePicker from '../components/date-picker';
 import List from '../components/list';
 import Details from '../components/details';
+import Search from '../components/search';
 import * as listActions from '../actions/list';
 import * as appActions from '../actions/app';
 
-const App = ({ list, currentDate, selectedListItem, actions }) => {
+const App = ({ currentList, list, date, selectedListItem, actions }) => {
     return (
         <div>
-            <DatePicker currentDate={currentDate} actions={actions} />
+            <div className="header">
+                <DatePicker currentDate={date} actions={actions} />
+                <Search list={list} />
+            </div>
             <div className="content">
-                <List list={list} currentDate={currentDate} selectedListItem={selectedListItem} actions={actions} />
+                <List list={currentList} currentDate={date} selectedListItem={selectedListItem} actions={actions} />
                 <Details selectedListItem={selectedListItem} actions={actions} />
             </div>
         </div>
@@ -25,18 +29,43 @@ App.propTypes = {
     actions: PropTypes.object.isRequired
 };
 
-const mapStateToProps = state => {
-    const currentDate = state.app.currentDate;
-    const list = state.list.filter(
+const filterListByDate = (list, date) => {
+    return list.filter(
         item =>
-            moment(currentDate).isSame(item.created, 'day') ||
-            moment(currentDate).isBetween(item.created, item.completed, 'day', '[]')
+            moment(date).isSame(item.created, 'day') ||
+            moment(date).isBetween(item.created, item.completed, 'day', '[]')
     );
+}
+
+const filterListByText = (list, text) => {
+    return list.filter(
+        item =>
+            item.title.indexOf(text) > -1 ||
+            item.text.indexOf(text) > -1
+    );
+}
+
+const getFilteredList = (appState, list) => {
+    switch (appState.filterType) {
+        case 'date':
+            return filterListByDate(list, appState.date);
+        case 'search':
+            return filterListByText(list, appState.search);
+        case 'tag':
+            return filterListByText(list, appState.tag);
+        default:
+            return null;
+    }
+}
+
+const mapStateToProps = state => {
+    const currentList = getFilteredList(state.app, state.list);
     const selectedListItemId = state.app.selectedListItemId;
-    const selectedListItem = selectedListItemId && list.find(item => item.id === selectedListItemId);
+    const selectedListItem = selectedListItemId && currentList.find(item => item.id === selectedListItemId);
     return {
-        currentDate,
-        list,
+        date: state.app.date,
+        currentList,
+        list: state.app.list,
         selectedListItem
     };
 };

@@ -71,7 +71,6 @@ class Details extends Component {
             </div>
         );
 
-        console.log('rendering', selectedListItem);
         return (
             <div className="details">
                 <div>

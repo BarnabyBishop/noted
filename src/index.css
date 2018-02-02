@@ -3,3 +3,20 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.icon-search {
+    height: 20px;
+    width: 20px;
+    background-image: url('/images/icons/icon-search.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+:focus {
+    outline-color: transparent;
+    outline-style: none;
+}
+
+.header {
+    margin-top: 5px;
+}
