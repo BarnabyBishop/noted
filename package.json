@@ -81,7 +81,7 @@
         "build": "npm run build-client && npm run build-server",
         "test": "node scripts/test.js --env=jsdom",
         "electron": "npm run build-client && npm run build-server && electron .",
-        "run-server": "NODE_PORT=4321 NODE_ENV='development' pm2 start server"
+        "run-server": "NODE_PORT=4321 NODE_ENV='production' pm2 start server"
     },
     "eslintConfig": {
         "extends": "react-app"
