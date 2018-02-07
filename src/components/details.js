@@ -72,7 +72,7 @@ class Details extends Component {
         );
 
         return (
-            <div className="details">
+            <div className="details column-right">
                 <div>
                     <textarea
                         ref={textElement => {

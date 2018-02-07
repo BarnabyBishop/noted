@@ -73,7 +73,6 @@ class List extends Component {
         if (!result.destination) {
             return;
         }
-        console.log('result.destination.index', result.destination.index);
         const sourceIndex = result.source.index;
         const destinationIndex = result.destination.index
         const movingUp = sourceIndex - destinationIndex > 0;
@@ -103,7 +102,7 @@ class List extends Component {
             <DragDropContext onDragEnd={this.onDragEnd.bind(this)}>
                 <Droppable droppableId="droppable">
                     {(provided, snapshot) => (
-                        <div className="list" ref={provided.innerRef}>
+                        <div className="list column-left" ref={provided.innerRef}>
                             {sortedList.map((item, index) => (
                                 <Draggable key={item.id} draggableId={item.id} index={index}>
                                     {(provided, snapshot) => (

@@ -75,7 +75,7 @@
         "uuid": "^3.0.1"
     },
     "scripts": {
-        "start": "NODE_PORT=4321 NODE_ENV='development' nodemon src/start-dev.js --watch src/server --exec babel-node",
+        "start": "NODE_PORT=4321 NODE_ENV='development' nodemon src/start-dev.js --watch server --exec babel-node",
         "build-client": "node src/build.js",
         "build-server": "NODE_ENV='production' babel src/server --out-dir build/server",
         "build": "npm run build-client && npm run build-server",

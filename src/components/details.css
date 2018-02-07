@@ -1,12 +1,12 @@
 .details {
-    display: inline-block;
-    margin: 5px;
-    width: calc(100% - 250px - 20px - 20px - 5px); /* 100% - list width - margins - padding - breathing space */
+    /* display: inline-block; */
+    /* margin: 5px; */
+    /* width: calc(100% - 250px - 20px - 20px - 5px); 100% - list width - margins - padding - breathing space */
 }
 
 .details-text {
-    border: solid 1px #ccc;
-    border-radius: 5px;
+    /* border: solid 1px #e5e5e5; */
+    /* border-radius: 5px; */
     height: 500px;
     width: 100%;
     font-size: 12pt;
@@ -22,4 +22,9 @@
 .markdown-help {
     text-decoration: none;
     color: #999;
+}
+
+.CodeMirror {
+    /* border-radius: 5px; */
+    border: none;
 }

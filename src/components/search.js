@@ -23,9 +23,9 @@ export default class Search extends Component {
     }
     render() {
         return (
-            <div className="search">
-                <input className="search--input" type="text" onChange={this.onChange.bind(this)} />
+            <div className="search column-right">
                 <i className="fas fa-search"></i>
+                <input className="search--input" type="text" onChange={this.onChange.bind(this)} />
             </div>
         );
     }

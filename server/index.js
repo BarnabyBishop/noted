@@ -12,31 +12,29 @@ import initData from './data';
 import error from './middleware/error';
 import auth from './middleware/auth';
 
-module.exports = () => {
-    const DEFAULT_NODE_PORT = process.env.NODE_PORT || 4321;
-    const data = initData(process.env.DB_HOST);
+const DEFAULT_NODE_PORT = process.env.NODE_PORT || 4321;
+const data = initData(process.env.DB_HOST);
 
-    const app = new Koa();
+const app = new Koa();
 
-    Object.assign(app.context, {
-        data,
-        authToken: process.env.AUTH_TOKEN
-    });
+Object.assign(app.context, {
+    data,
+    authToken: process.env.AUTH_TOKEN
+});
 
-    // body parser
-    app.use(bodyParser());
+// body parser
+app.use(bodyParser());
 
-    // Setup views
-    app.use(views('./public'));
+// Setup views
+app.use(views('./public'));
 
-    // basic error handling
-    app.use(error);
+// basic error handling
+app.use(error);
 
-    app.use(auth);
+app.use(auth);
 
-    app.use(router.routes());
+app.use(router.routes());
 
-    app.listen(DEFAULT_NODE_PORT, () => {
-        console.log(chalk.green(`API server listening on ${DEFAULT_NODE_PORT}.`));
-    });
-};
+app.listen(DEFAULT_NODE_PORT, () => {
+    console.log(chalk.green(`API server listening on ${DEFAULT_NODE_PORT}.`));
+});

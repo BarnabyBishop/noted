@@ -13,7 +13,9 @@ const App = ({ currentList, list, date, selectedListItem, actions }) => {
     return (
         <div>
             <div className="header">
-                <DatePicker currentDate={date} actions={actions} />
+                <div className="filters column-left">
+                    <DatePicker currentDate={date} actions={actions} />
+                </div>
                 <Search list={list} />
             </div>
             <div className="content">
@@ -65,7 +67,7 @@ const mapStateToProps = state => {
     return {
         date: state.app.date,
         currentList,
-        list: state.app.list,
+        list: state.list,
         selectedListItem
     };
 };
