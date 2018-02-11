@@ -16,7 +16,7 @@ const App = ({ currentList, list, date, selectedListItem, actions }) => {
                 <div className="filters column-left">
                     <DatePicker currentDate={date} actions={actions} />
                 </div>
-                <Search list={list} />
+                <Search list={list} actions={actions} />
             </div>
             <div className="content">
                 <List list={currentList} currentDate={date} selectedListItem={selectedListItem} actions={actions} />
@@ -40,10 +40,11 @@ const filterListByDate = (list, date) => {
 }
 
 const filterListByText = (list, text) => {
+    const loweredText = text.toLowerCase();
     return list.filter(
         item =>
-            item.title.indexOf(text) > -1 ||
-            item.text.indexOf(text) > -1
+            (item.title && item.title.toLowerCase().indexOf(loweredText) > -1) ||
+            (item.text && item.text.toLowerCase().indexOf(loweredText) > -1)
     );
 }
 
