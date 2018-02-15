@@ -1,0 +1,25 @@
+.tags-picker {
+    display: inline-block;
+    margin-left: 20px;
+    margin-right: 20px;
+    position: relative;
+}
+
+.tags-picker--list {
+    position: absolute;
+    background-color: #4990fe;
+    padding: 10px;
+}
+
+.tags-picker--tag {
+    margin-bottom: 5px;
+}
+
+.tags-picker--tag:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.tags-picker--tag-active {
+    text-decoration: underline;
+}

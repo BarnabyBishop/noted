@@ -3,20 +3,22 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import DatePicker from '../components/date-picker';
+import TagPicker from '../components/tag-picker';
 import List from '../components/list';
 import Details from '../components/details';
 import Search from '../components/search';
 import * as listActions from '../actions/list';
 import * as appActions from '../actions/app';
 
-const App = ({ currentList, list, date, selectedListItem, actions }) => {
+const App = ({ currentList, list, tags, tag, date, search, selectedListItem, actions }) => {
     return (
         <div>
             <div className="header">
                 <div className="filters column-left">
+                    <TagPicker tags={tags} currentTag={tag} actions={actions} />
                     <DatePicker currentDate={date} actions={actions} />
                 </div>
-                <Search list={list} actions={actions} />
+                <Search list={list} search={search} actions={actions} />
             </div>
             <div className="content">
                 <List list={currentList} currentDate={date} selectedListItem={selectedListItem} actions={actions} />
@@ -67,8 +69,11 @@ const mapStateToProps = state => {
     const selectedListItem = selectedListItemId && currentList.find(item => item.id === selectedListItemId);
     return {
         date: state.app.date,
+        tag: state.app.tag,
+        search: state.app.search,
         currentList,
         list: state.list,
+        tags: state.tags,
         selectedListItem
     };
 };

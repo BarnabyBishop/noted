@@ -8,7 +8,7 @@ const filterTypes = {
 
 const initialState = {
     date: new Date().toISOString(),
-    search: null,
+    search: '',
     tag: null,
     filterType: filterTypes.date,
     selectedListItemId: null
@@ -19,22 +19,31 @@ const app = (state = initialState, action) => {
         case 'SET_DATE':
             return {
                 ...state,
-                date: action.date
+                date: action.date,
+                filterType: 'date',
+                tag: null,
+                search: ''
             };
         case 'SET_SEARCH':
             return {
                 ...state,
-                search: action.search
+                search: action.search,
+                filterType: action.search ? 'search' : 'date',
+                tag: null
             };
         case 'SET_TAG':
             return {
                 ...state,
-                tag: action.tag
+                tag: action.tag,
+                filterType: 'tag',
+                search: ''
             };
-        case 'SET_FILTER_TYPE':
+        case 'SET_DATE_FILTER':
             return {
                 ...state,
-                filterType: action.filterType
+                filterType: 'date',
+                tag: null,
+                search: ''
             };
         case 'SET_SELECTED_LIST_ITEM':
             return {

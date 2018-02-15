@@ -29,5 +29,5 @@ export default (dbHost) => {
         }
     });
 
-    return { ListItem };
+    return { sequelize, ListItem };
 };

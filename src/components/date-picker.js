@@ -17,6 +17,10 @@ class DatePicker extends Component {
         this.props.actions.setDate(nextDate);
     }
 
+    setDate() {
+        this.props.actions.setDateFilter();
+    }
+
     render() {
         const currentDate = moment(this.props.currentDate);
         return (
@@ -24,7 +28,7 @@ class DatePicker extends Component {
                 <div className="prev" onClick={this.previous.bind(this)}>
                     <i className="fas fa-arrow-left"></i>
                 </div>
-                <div>{currentDate.format("ddd, Do MMM")}</div>
+                <div onClick={this.setDate.bind(this)}>{currentDate.format("ddd, Do MMM")}</div>
                 <div className="next" onClick={this.next.bind(this)}>
                     <i className="fas fa-arrow-right"></i>
                 </div>
