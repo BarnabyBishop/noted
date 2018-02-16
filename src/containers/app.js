@@ -10,19 +10,19 @@ import Search from '../components/search';
 import * as listActions from '../actions/list';
 import * as appActions from '../actions/app';
 
-const App = ({ currentList, list, tags, tag, date, search, selectedListItem, actions }) => {
+const App = ({ actions, currentList, list, tags, tag, date, search, selectedListItem, filterType }) => {
     return (
         <div>
             <div className="header">
                 <div className="filters column-left">
-                    <TagPicker tags={tags} currentTag={tag} actions={actions} />
-                    <DatePicker currentDate={date} actions={actions} />
+                    <TagPicker actions={actions} tags={tags} currentTag={tag} />
+                    <DatePicker actions={actions} currentDate={date} filterType={filterType} />
                 </div>
-                <Search list={list} search={search} actions={actions} />
+                <Search actions={actions} list={list} search={search} />
             </div>
             <div className="content">
-                <List list={currentList} currentDate={date} selectedListItem={selectedListItem} actions={actions} />
-                <Details selectedListItem={selectedListItem} actions={actions} />
+                <List actions={actions} list={currentList} currentDate={date} selectedListItem={selectedListItem} />
+                <Details actions={actions} selectedListItem={selectedListItem} />
             </div>
         </div>
     );
@@ -71,6 +71,7 @@ const mapStateToProps = state => {
         date: state.app.date,
         tag: state.app.tag,
         search: state.app.search,
+        filterType: state.app.filterType,
         currentList,
         list: state.list,
         tags: state.tags,

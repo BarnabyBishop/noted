@@ -22,13 +22,13 @@ class TagPicker extends Component {
 
     render() {
         return (
-            <div className="tags-picker">
+            <div className={classnames({ 'tags-picker': true, 'tags-picker--active': this.props.currentTag })}>
                 <div className="tags-picker--button" onClick={this.onButtonClick.bind(this)}>
                     <i className="fab fa-slack-hash"></i>{this.props.currentTag && this.props.currentTag.replace('#', '')}
                 </div>
                 {this.state.showList &&
                     <div className="tags-picker--list">
-                        {this.props.tags.map(tag => <div key={tag} className={classnames({ 'tags-picker--tag': true, 'tags-picker--tag-active': this.state.currentTag === tag })} onClick={this.onTagClick.bind(this, tag)}>{tag}</div>)}
+                        {this.props.tags.map(tag => <div key={tag} className={classnames({ 'tags-picker--tag': true, 'tags-picker--tag-active': this.props.currentTag === tag })} onClick={this.onTagClick.bind(this, tag)}>{tag}</div>)}
                     </div>
                 }
             </div>

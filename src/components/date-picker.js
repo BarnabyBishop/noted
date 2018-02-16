@@ -23,14 +23,24 @@ class DatePicker extends Component {
 
     render() {
         const currentDate = moment(this.props.currentDate);
+        if (this.props.filterType === 'date') {
+            return (
+                <div className="date-picker">
+                    <div className="prev" onClick={this.previous.bind(this)}>
+                        <i className="fas fa-arrow-left"></i>
+                    </div>
+                    <div onClick={this.setDate.bind(this)}>{currentDate.format("ddd, Do MMM")}</div>
+                    <div className="next" onClick={this.next.bind(this)}>
+                        <i className="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+            );
+        }
+
         return (
             <div className="date-picker">
-                <div className="prev" onClick={this.previous.bind(this)}>
-                    <i className="fas fa-arrow-left"></i>
-                </div>
-                <div onClick={this.setDate.bind(this)}>{currentDate.format("ddd, Do MMM")}</div>
-                <div className="next" onClick={this.next.bind(this)}>
-                    <i className="fas fa-arrow-right"></i>
+                <div className="date-picker--calendar" onClick={this.setDate.bind(this)}>
+                    <i className="fas fa-calendar-alt"></i>
                 </div>
             </div>
         );

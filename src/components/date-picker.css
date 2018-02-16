@@ -1,9 +1,9 @@
 .date-picker {
-    width: 250px;
     display: inline-block;
     text-align: center;
     margin-top: 5px;
 }
+
 .date-picker div {
     display: inline-block;
 }
@@ -11,6 +11,10 @@
 .prev,
 .next {
     margin: 10px;
-    /* color: #777; */
+    cursor: pointer;
+}
+
+.date-picker--calendar {
+    margin: 10px;
     cursor: pointer;
 }

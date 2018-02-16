@@ -5,6 +5,10 @@
     position: relative;
 }
 
+.tags-picker--active {
+    min-width: 135px;
+}
+
 .tags-picker--list {
     position: absolute;
     background-color: #4990fe;
@@ -22,4 +26,8 @@
 
 .tags-picker--tag-active {
     text-decoration: underline;
+}
+
+.tags-picker--button {
+    cursor: pointer;
 }
