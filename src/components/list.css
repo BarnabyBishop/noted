@@ -1,13 +1,12 @@
 .list {
-    width: 250px;
-    margin: 5px;
+    width: 100%;
     display: inline-block;
     vertical-align: top;
 }
 
 .list-item {
     display: block;
-    border: solid 1px #ccc;
+    border: solid 1px #e5e5e5;
     padding: 10px 10px 10px 8px;
     background-color: #fff;
     margin-top: -1px;
@@ -19,12 +18,7 @@
 }
 
 .list-item-container:first-of-type .list-item {
-    border-top: solid 1px #ccc;
-    border-radius: 5px 5px 0px 0px;
-}
-
-.list-item-container:last-of-type .list-item {
-    border-radius: 0px 0px 5px 5px;
+    border-top: solid 1px #e5e5e5;
 }
 
 .list-item--saving {

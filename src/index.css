@@ -1,5 +1,48 @@
+/* html, body {
+    background-image: linear-gradient(#f8f8fa,#f4f4f7);
+} */
+
 body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+}
+
+.icon-search {
+    height: 20px;
+    width: 20px;
+    background-image: url('/images/icons/icon-search.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+:focus {
+    outline-color: transparent;
+    outline-style: none;
+}
+
+.header {
+    border-bottom: solid 1px #e8e8e8;
+    height: 50px;
+}
+
+.filters {
+    background-color: #4990fe;
+    color: #fff;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.card {
+    box-shadow: 0px 0px 5px 0px #e8e8e8;
+}
+
+.column-left {
+    width: 250px;
+    display: inline-block;
+}
+
+.column-right {
+    width: calc(100% - 270px);
+    display: inline-block;
 }

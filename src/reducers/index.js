@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
-import list from './list';
 import app from './app';
+import list from './list';
+import tags from './tags';
 
 const reducers = combineReducers({
+    app,
     list,
-    app
+    tags
 });
 
 export default reducers;

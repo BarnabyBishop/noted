@@ -56,16 +56,23 @@ class Details extends Component {
 
     render() {
         const { selectedListItem } = this.props;
-        const information = selectedListItem && (
+        let updatedAt = <span>No item selected</span>;
+
+        if (selectedListItem) {
+            updatedAt = selectedListItem.updatedAt ? <span>Updated at: <span>{moment(selectedListItem.updatedAt).format('kk:mm DD-MMM-YY')}</span></span> : <span>Item not yet saved</span>;
+        }
+
+        const information = (
             <div className="information">
-                Updated at: <span>{moment(selectedListItem.updatedAt).format('kk:mm DD-MMM-YY')}</span>{' '}
+                {updatedAt}{' '}
                 <a href="https://simplemde.com/markdown-guide" target="_blank" rel="nofollow" className="markdown-help">
                     ¿
                 </a>
             </div>
         );
+
         return (
-            <div className="details">
+            <div className="details column-right">
                 <div>
                     <textarea
                         ref={textElement => {
