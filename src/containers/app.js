@@ -12,7 +12,7 @@ import * as appActions from '../actions/app';
 
 const App = ({ actions, currentList, list, tags, tag, date, search, selectedListItem, filterType }) => {
     return (
-        <div>
+        <div className="app">
             <div className="header">
                 <div className="filters column-left">
                     <TagPicker actions={actions} tags={tags} currentTag={tag} />
