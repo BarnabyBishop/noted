@@ -77,7 +77,7 @@
     "scripts": {
         "start": "NODE_PORT=4321 NODE_ENV='development' nodemon src/start-dev.js --watch server --exec babel-node",
         "build-client": "node src/build.js",
-        "build-server": "NODE_ENV='production' babel src/server --out-dir build/server",
+        "build-server": "NODE_ENV='production' babel server --out-dir build/server --ignore node_modules",
         "build": "npm run build-client && npm run build-server",
         "test": "node scripts/test.js --env=jsdom",
         "electron": "npm run build-client && npm run build-server && electron .",
