@@ -16,12 +16,12 @@ const App = ({ actions, currentList, list, tags, tag, date, search, selectedList
             <div className="header">
                 <div className="filters column-left">
                     <TagPicker actions={actions} tags={tags} currentTag={tag} />
-                    <DatePicker actions={actions} currentDate={date} filterType={filterType} />
+                    <DatePicker actions={actions} filterType={filterType} currentDate={date} />
                 </div>
                 <Search actions={actions} list={list} search={search} />
             </div>
             <div className="content">
-                <List actions={actions} list={currentList} currentDate={date} selectedListItem={selectedListItem} />
+                <List actions={actions} list={currentList} filterType={filterType} currentDate={date} currentTag={tag} selectedListItem={selectedListItem} />
                 <Details actions={actions} selectedListItem={selectedListItem} />
             </div>
         </div>

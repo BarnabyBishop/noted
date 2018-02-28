@@ -27,7 +27,7 @@ class TagPicker extends Component {
                     <i className="fab fa-slack-hash"></i>{this.props.currentTag && this.props.currentTag.replace('#', '')}
                 </div>
                 <div className={classnames({ 'tags-picker--list': true, 'tags-picker--list-active': this.state.showList })}>
-                    {this.props.tags.map(tag => <div key={tag} className={classnames({ 'tags-picker--tag': true, 'tags-picker--tag-active': this.props.currentTag === tag })} onClick={this.onTagClick.bind(this, tag)}>{tag}</div>)}
+                    {this.props.tags.map((tag, index) => <div key={tag + index} className={classnames({ 'tags-picker--tag': true, 'tags-picker--tag-active': this.props.currentTag === tag })} onClick={this.onTagClick.bind(this, tag)}>{tag}</div>)}
                 </div>
             </div>
         );

@@ -15,8 +15,15 @@ class List extends Component {
         }
     }
     addItem(title, index) {
-        const { actions, currentDate } = this.props;
-        actions.addListItem(title, currentDate, index);
+        const { actions, filterType, currentDate, currentTag } = this.props;
+        // If a tag is selected give the item the new tag - not created date
+        let createdDate, text = null;
+        if (filterType === 'tag') {
+            text = '\n' + currentTag;
+        } else {
+            createdDate = currentDate;
+        }
+        actions.addListItem(title, createdDate, index, text);
     }
 
     addNextItem(id) {

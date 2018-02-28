@@ -6,6 +6,7 @@ const list = (state = [], action) => {
                 {
                     id: action.id,
                     dirty: true,
+                    title: action.title,
                     text: action.text,
                     created: action.created,
                     completed: null,

@@ -1,9 +1,10 @@
 import uuid from 'uuid/v4';
 
-export const addListItem = (title, created, sortOrder) => ({
+export const addListItem = (title, created, sortOrder, text) => ({
     type: 'ADD_LIST_ITEM',
     id: uuid(),
     title: title || '',
+    text: text || '',
     created,
     sortOrder
 });
