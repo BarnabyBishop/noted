@@ -6,23 +6,20 @@ import App from './containers/app';
 import reducer from './reducers';
 import reduxLogger from './middleware/redux-logger';
 import saveListItem from './middleware/save-list-item';
-import { getList, getTags } from './service';
+import getList from './middleware/get-list';
+import getTags from './middleware/get-tags';
+import { getList as getListAction } from './actions/list';
 import './index.css';
 
 const init = async () => {
-    const data = await Promise.all([
-        getList(),
-        getTags()
-    ]);
-    const list = data[0].list;
-    const tags = data[1].tags;
-    const initialState = { list, tags };
-
     const store = createStore(
         reducer,
-        initialState, // eslint-disable-line
-        applyMiddleware(reduxLogger, saveListItem)
+        {}, // no initial state
+        applyMiddleware(reduxLogger, getList, getTags, saveListItem)
     );
+
+    // Get initial data
+    store.dispatch(getListAction());
 
     render(
         <Provider store={store}>

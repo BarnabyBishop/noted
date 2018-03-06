@@ -1,5 +1,9 @@
 import uuid from 'uuid/v4';
 
+export const getList = () => ({
+    type: 'GET_LIST'
+});
+
 export const addListItem = (title, created, sortOrder, text) => ({
     type: 'ADD_LIST_ITEM',
     id: uuid(),
@@ -7,6 +11,12 @@ export const addListItem = (title, created, sortOrder, text) => ({
     text: text || '',
     created,
     sortOrder
+});
+
+export const updateListItemEditorState = (id, editorState) => ({
+    type: 'UPDATE_LIST_ITEM_EDITORSTATE',
+    id,
+    editorState
 });
 
 export const updateListItemSortOrder = (id, sortOrder) => ({
@@ -22,10 +32,9 @@ export const updateListItem = (id, title, height) => ({
     height
 });
 
-export const updateListItemText = (id, text) => ({
+export const updateListItemText = (id) => ({
     type: 'UPDATE_LIST_ITEM_TEXT',
-    id,
-    text
+    id
 });
 
 export const saveListItem = id => ({

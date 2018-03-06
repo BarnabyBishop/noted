@@ -1,5 +1,10 @@
 const tags = (state = [], action) => {
-    return state;
+    switch (action.type) {
+        case 'GOT_TAGS':
+            return action.tags;
+        default:
+            return state;
+    }
 };
 
 export default tags;

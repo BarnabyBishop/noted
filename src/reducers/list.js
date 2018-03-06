@@ -1,5 +1,9 @@
+import buildEditorState from '../utils/editor-state';
+
 const list = (state = [], action) => {
     switch (action.type) {
+        case 'GOT_LIST':
+            return action.list;
         case 'ADD_LIST_ITEM':
             return [
                 ...state,
@@ -13,14 +17,12 @@ const list = (state = [], action) => {
                     sortOrder: action.sortOrder
                 }
             ];
-        case 'UPDATE_LIST_ITEM':
+        case 'SET_SELECTED_LIST_ITEM':
             return state.map(item => {
-                if (item.id === action.id) {
+                if (item.id === action.itemId) {
                     return {
                         ...item,
-                        dirty: true,
-                        title: action.title,
-                        height: action.height
+                        editorState: buildEditorState(item.text)
                     };
                 }
                 return item;
@@ -30,8 +32,30 @@ const list = (state = [], action) => {
                 if (item.id === action.id) {
                     return {
                         ...item,
+                        text: item.editorState.getCurrentContent().getPlainText()
+                    };
+                }
+                return item;
+            });
+        case 'UPDATE_LIST_ITEM_EDITORSTATE':
+            return state.map(item => {
+                if (item.id === action.id) {
+                    return {
+                        ...item,
                         dirty: true,
-                        text: action.text
+                        editorState: action.editorState
+                    };
+                }
+                return item;
+            });
+        case 'UPDATE_LIST_ITEM':
+            return state.map(item => {
+                if (item.id === action.id) {
+                    return {
+                        ...item,
+                        dirty: true,
+                        title: action.title,
+                        height: action.height
                     };
                 }
                 return item;

@@ -103,6 +103,8 @@ class List extends Component {
     }
 
     render() {
+        if (!this.props.list) return <div>Loading</div>;
+
         const sortedList = this.getSortedList();
         const { selectedListItem } = this.props;
         return (
@@ -155,7 +157,6 @@ class List extends Component {
                                 </Draggable>
                             ))}
                             {provided.placeholder}
-                            <div className={classnames({ 'list-info': true, 'list-info-visible': this.state.infoVisible })} onClick={this.toggleInfo.bind(this)}>¿<div className="info-details">{JSON.stringify(sortedList)}</div></div>
                         </div>
                     )}
                 </Droppable>

@@ -1,49 +1,24 @@
 import React, { Component } from 'react';
-import SimpleMDE from 'simplemde';
-import moment from 'moment';
 import './details.css';
+import { Editor, EditorState, RichUtils, AtomicBlockUtils } from 'draft-js';
 
-class Details extends Component {
+
+
+export default class Details extends Component {
     constructor(props) {
         super(props);
-        this.textElement = null;
-        this.simpleMDE = null;
-        this.id = null;
+
+        this.state = {
+            dragging: false
+        };
+        this.focus = () => this.refs.editor.focus();
         this.autosave = null;
     }
 
-    componentDidMount() {
-        this.createEditor();
-    }
-
-    componentDidUpdate(prevProps) {
-        const { selectedListItem } = this.props;
-        const prevSelectedListItem = prevProps.selectedListItem;
-        if (selectedListItem && (!prevSelectedListItem || selectedListItem.id !== prevSelectedListItem.id)) {
-            this.id = selectedListItem.id;
-            this.simpleMDE.value(selectedListItem.text || '');
-        }
-    }
-
-    createEditor() {
-        this.simpleMDE = new SimpleMDE({
-            element: this.textElement,
-            spellChecker: false,
-            status: false,
-            toolbar: false
-        });
-        this.simpleMDE.codemirror.on('change', this.handleChange.bind(this));
-        this.simpleMDE.codemirror.on('blur', this.handleBlur.bind(this));
-    }
-
-    handleChange() {
-        const currentValue = this.props.selectedListItem.text;
-        const newValue = this.simpleMDE.value();
-        if (currentValue !== newValue) {
-            this.props.actions.updateListItemText(this.id, this.simpleMDE.value());
-            clearTimeout(this.autosave);
-            this.autosave = setTimeout(this.save.bind(this), 1000);
-        }
+    onChange(editorState) {
+        this.props.actions.updateListItemEditorState(this.props.selectedListItem.id, editorState);
+        clearTimeout(this.autosave);
+        this.autosave = setTimeout(this.save.bind(this), 1000);
     }
 
     handleBlur() {
@@ -51,39 +26,124 @@ class Details extends Component {
     }
 
     save() {
-        this.props.actions.saveListItem(this.id);
+        this.props.actions.updateListItemText(this.props.selectedListItem.id);
+        this.props.actions.saveListItem(this.props.selectedListItem.id);
+    }
+
+    onTab(e) {
+        const maxDepth = 4;
+        this.onChange(RichUtils.onTab(e, this.props.editorState, maxDepth));
+    }
+
+    onDragEnter(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setState({ dragging: true });
+    }
+
+    onDragLeave(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        this.setState({ dragging: false });
+    }
+
+    onDrop(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var dt = e.dataTransfer;
+        var files = dt.files;
+
+        var firstImage;
+        for (var i = 0; i < files.length; i++) {
+            firstImage = files[i];
+            var imageType = /^image\//;
+
+            if (!imageType.test(firstImage.type)) {
+                continue;
+            }
+            break;
+        }
+
+        const reader = new FileReader();
+        reader.onload = this.insertImage.bind(this);
+        // (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+        reader.readAsDataURL(firstImage);
+    }
+
+    insertImage(e) {
+        const imageSrc = e.target.result;
+        const { editorState } = this.props;
+        const contentState = editorState.getCurrentContent();
+        const contentStateWithEntity = contentState.createEntity('image', 'IMMUTABLE', {
+            src: imageSrc,
+            inline: true
+        });
+        const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+        const newEditorState = EditorState.set(editorState, { currentContent: contentStateWithEntity });
+        this.props.updateArticleField(
+            this.props.field,
+            AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' ')
+        );
+        this.setState(
+            {
+                // editorState: AtomicBlockUtils.insertAtomicBlock(newEditorState, entityKey, ' '),
+                showURLInput: false,
+                urlValue: ''
+            },
+            () => {
+                setTimeout(() => this.focus(), 0);
+            }
+        );
+    }
+
+    mediaBlockRenderer(block) {
+        if (block.getType() === 'atomic') {
+            return {
+                component: Image,
+                editable: false
+            };
+        }
+        return null;
     }
 
     render() {
-        const { selectedListItem } = this.props;
-        let updatedAt = <span>No item selected</span>;
+        if (!this.props.selectedListItem) return <div className="details column-right"><em>Select an item.</em></div>;
 
-        if (selectedListItem) {
-            updatedAt = selectedListItem.updatedAt ? <span>Updated at: <span>{moment(selectedListItem.updatedAt).format('kk:mm DD-MMM-YY')}</span></span> : <span>Item not yet saved</span>;
-        }
-
-        const information = (
-            <div className="information">
-                {updatedAt}{' '}
-                <a href="https://simplemde.com/markdown-guide" target="_blank" rel="nofollow" className="markdown-help">
-                    ¿
-                </a>
-            </div>
-        );
-
+        const { editorState } = this.props.selectedListItem;
         return (
             <div className="details column-right">
-                <div>
-                    <textarea
-                        ref={textElement => {
-                            this.textElement = textElement;
-                        }}
-                    />
+                <div className="RichEditor-root">
+                    <div
+                        className="RichEditor-editor"
+                        onClick={this.focus.bind(this)}
+                        onDragEnter={this.onDragEnter.bind(this)}
+                        onDragLeave={this.onDragLeave.bind(this)}
+                        onDrop={this.onDrop.bind(this)}
+                    >
+                        <Editor
+                            blockRendererFn={this.mediaBlockRenderer.bind(this)}
+                            blockStyleFn={getBlockStyle}
+                            editorState={editorState}
+                            onChange={this.onChange.bind(this)}
+                            onTab={this.onTab.bind(this)}
+                            ref="editor"
+                            spellCheck={true}
+                        />
+                    </div>
                 </div>
-                {information}
             </div>
         );
     }
 }
 
-export default Details;
+
+function getBlockStyle(block) {
+    switch (block.getType()) {
+        case 'blockquote':
+            return 'fancy-blockquote';
+        default:
+            return null;
+    }
+}
+

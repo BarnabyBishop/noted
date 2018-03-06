@@ -51,6 +51,8 @@ const filterListByText = (list, text) => {
 }
 
 const getFilteredList = (appState, list) => {
+    if (!list || !list.length) return null;
+
     switch (appState.filterType) {
         case 'date':
             return filterListByDate(list, appState.date);

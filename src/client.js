@@ -12,7 +12,7 @@ var WebpackDevServer = require('webpack-dev-server');
 var historyApiFallback = require('connect-history-api-fallback');
 var httpProxyMiddleware = require('http-proxy-middleware');
 var detect = require('detect-port');
-var clearConsole = () => {}; //require('react-dev-utils/clearConsole');
+var clearConsole = () => { }; //require('react-dev-utils/clearConsole');
 var checkRequiredFiles = require('react-dev-utils/checkRequiredFiles');
 var formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
 var getProcessForPort = require('react-dev-utils/getProcessForPort');
@@ -49,7 +49,7 @@ module.exports = () => {
         // recompiling a bundle. WebpackDevServer takes care to pause serving the
         // bundle, so if you refresh, it'll wait instead of serving the old one.
         // "invalid" is short for "bundle invalidated", it doesn't imply any errors.
-        compiler.plugin('invalid', function() {
+        compiler.plugin('invalid', function () {
             if (isInteractive) {
                 clearConsole();
             }
@@ -60,7 +60,7 @@ module.exports = () => {
 
         // "done" event fires when Webpack has finished recompiling the bundle.
         // Whether or not you have warnings or errors, you will get this event.
-        compiler.plugin('done', function(stats) {
+        compiler.plugin('done', function (stats) {
             if (isInteractive) {
                 clearConsole();
             }
@@ -115,22 +115,22 @@ module.exports = () => {
     // We need to provide a custom onError function for httpProxyMiddleware.
     // It allows us to log custom error messages on the console.
     function onProxyError(proxy) {
-        return function(err, req, res) {
+        return function (err, req, res) {
             var host = req.headers && req.headers.host;
             console.log(
                 chalk.red('Proxy error:') +
-                    ' Could not proxy request ' +
-                    chalk.cyan(req.url) +
-                    ' from ' +
-                    chalk.cyan(host) +
-                    ' to ' +
-                    chalk.cyan(proxy) +
-                    '.'
+                ' Could not proxy request ' +
+                chalk.cyan(req.url) +
+                ' from ' +
+                chalk.cyan(host) +
+                ' to ' +
+                chalk.cyan(proxy) +
+                '.'
             );
             console.log(
                 'See https://nodejs.org/api/errors.html#errors_common_system_errors for more information (' +
-                    chalk.cyan(err.code) +
-                    ').'
+                chalk.cyan(err.code) +
+                ').'
             );
             console.log();
 
@@ -141,14 +141,14 @@ module.exports = () => {
             }
             res.end(
                 'Proxy error: Could not proxy request ' +
-                    req.url +
-                    ' from ' +
-                    host +
-                    ' to ' +
-                    proxy +
-                    ' (' +
-                    err.code +
-                    ').'
+                req.url +
+                ' from ' +
+                host +
+                ' to ' +
+                proxy +
+                ' (' +
+                err.code +
+                ').'
             );
         };
     }
@@ -193,7 +193,7 @@ module.exports = () => {
             var hpm = httpProxyMiddleware(pathname => mayProxy.test(pathname), {
                 target: proxy,
                 logLevel: 'silent',
-                onProxyReq: function(proxyReq, req, res) {
+                onProxyReq: function (proxyReq, req, res) {
                     // Browers may send Origin headers even with same-origin
                     // requests. To prevent CORS issues, we have to change
                     // the Origin to match the target URL.
@@ -306,9 +306,9 @@ module.exports = () => {
             var question =
                 chalk.yellow(
                     'Something is already running on port ' +
-                        DEFAULT_WEBPACK_PORT +
-                        '.' +
-                        (existingProcess ? ' Probably:\n  ' + existingProcess : '')
+                    DEFAULT_WEBPACK_PORT +
+                    '.' +
+                    (existingProcess ? ' Probably:\n  ' + existingProcess : '')
                 ) + '\n\nWould you like to run the app on another port instead?';
 
             prompt(question, true).then(shouldChangePort => {
