@@ -36,8 +36,10 @@ App.propTypes = {
 const filterListByDate = (list, date) => {
     return list.filter(
         item =>
-            moment(date).isSame(item.created, 'day') ||
-            moment(date).isBetween(item.created, item.completed, 'day', '[]')
+            item.created && (
+                moment(date).isSame(item.created, 'day') ||
+                moment(date).isBetween(item.created, item.completed, 'day', '[]')
+            )
     );
 }
 
