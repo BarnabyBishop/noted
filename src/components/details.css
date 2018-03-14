@@ -16,6 +16,7 @@
     color: #999;
 }
 
-.details {
-    padding: 10px
+.DraftEditor-root {
+    min-height: 500px;
+    padding: 10px;
 }
