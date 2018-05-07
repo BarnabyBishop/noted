@@ -13,7 +13,17 @@ export default store => next => async action => {
     // Only save an item if it has changed (dirty) and has some title or text filled in
     if (listItem && listItem.dirty && (listItem.title || listItem.text)) {
         next({ type: 'SAVING_LIST_ITEM', id: action.id });
-        const savedListItem = await saveListItem(listItem);
+        // Remove unnecessary fields, esp editorState
+        const prunedItem = {
+            id: listItem.id,
+            title: listItem.title,
+            text: listItem.text,
+            height: listItem.height,
+            sortOrder: listItem.sortOrder,
+            created: listItem.created,
+            completed: listItem.completed
+        };
+        const savedListItem = await saveListItem(prunedItem);
         return next({ type: 'SAVED_LIST_ITEM', id: action.id, item: savedListItem });
     }
     return next({ type: 'SAVE_LIST_ITEM_FAILED', id: action.id });
