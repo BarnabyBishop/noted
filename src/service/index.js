@@ -1,5 +1,12 @@
 require('isomorphic-fetch');
 
+import ApolloClient from 'apollo-boost';
+import gql from 'graphql-tag';
+
+const client = new ApolloClient({
+    uri: `/graphql${location.search}`
+});
+
 export async function saveListItem(listItem) {
     const response = await fetch(`/api/save-list-item${location.search}`, {
         method: 'POST',
@@ -23,10 +30,14 @@ export async function getList() {
 }
 
 export async function getTags() {
-    const response = await fetch(`/api/get-tags${location.search}`);
-    if (response.status >= 400) {
-        throw new Error('Bad response from server');
-    }
-    const data = await response.json();
-    return data;
+    const response = await client.query({
+        query: gql`
+            query Query {
+                tags {
+                    tag
+                }
+            }
+        `
+    });
+    return response.data;
 }
