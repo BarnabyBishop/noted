@@ -44,10 +44,14 @@ export default dbHost => {
             createdAt: String
             updatedAt: String
         }
+        type Tag {
+            tag: String
+        }
         type Query {
             allItems: [ListItem]
             itemBySearch(term: String): [ListItem],
-            itemByDate(date: String): [ListItem]
+            itemByDate(date: String): [ListItem],
+            tags: [Tag]
         }
         `;
 
@@ -65,7 +69,28 @@ export default dbHost => {
                 //     moment(date).isBetween(item.created, item.completed, 'day', '[]');
                 const startOfDay = moment(args.date).startOf('day');
                 const endOfDay = moment(args.date).endOf('day');
-                return ListItem.findAll({ where: { created: { $gte: startOfDay, $lt: endOfDay } } });
+                return ListItem.findAll({
+                    where: {
+                        $or: [
+                            { created: { $gte: startOfDay, $lt: endOfDay } },
+                            [{ created: { $lte: startOfDay } }, { completed: { $gte: endOfDay } }],
+                            [{ created: { $lte: startOfDay } }, { completed: null }]
+                        ]
+                    }
+                });
+            },
+            async tags(_, args) {
+                const tags = await ListItem.sequelize.query(
+                    // So close, only match a word boundary, then # then not ^#. or whitespace then match a word, - or /
+                    // Overly matches https://url.com/#10-defining-a-component
+                    "select distinct regexp_matches(text, '\\Y\\#[\\w\\-\\/]+', 'g') as tag from list_items where text ~ '\\Y\\#[^\\#\\s.][\\w\\-\\/]+' order by tag",
+                    { type: ListItem.sequelize.QueryTypes.SELECT }
+                );
+
+                // This regexp_matches returns a text array which gives us an unfriendly object of nested arrays. Flatten them out
+                return tags.map(item => {
+                    return { tag: item.tag[0] };
+                });
             }
         }
     };
