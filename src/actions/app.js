@@ -3,21 +3,17 @@ export const setDate = date => ({
     date
 });
 
-export const setSearch = search => ({
+export const setSearch = term => ({
     type: 'SET_SEARCH',
-    search
+    term
 });
 
-export const setTag = tag => ({
+export const setTag = term => ({
     type: 'SET_TAG',
-    tag
+    term
 });
 
 export const setSelectedListItem = itemId => ({
     type: 'SET_SELECTED_LIST_ITEM',
     itemId
-});
-
-export const setDateFilter = () => ({
-    type: 'SET_DATE_FILTER'
 });

@@ -62,11 +62,11 @@ export default dbHost => {
                 return ListItem.findAll();
             },
             itemBySearch(_, args) {
-                return ListItem.findAll({ where: { title: { $ilike: `%${args.term}%` } } });
+                return ListItem.findAll({
+                    where: { $or: [{ title: { $ilike: `%${args.term}%` } }, { text: { $ilike: `%${args.term}%` } }] }
+                });
             },
             itemByDate(_, args) {
-                // moment(date).isSame(item.created, 'day') ||
-                //     moment(date).isBetween(item.created, item.completed, 'day', '[]');
                 const startOfDay = moment(args.date).startOf('day');
                 const endOfDay = moment(args.date).endOf('day');
                 return ListItem.findAll({

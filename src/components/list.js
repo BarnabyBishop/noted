@@ -12,12 +12,13 @@ class List extends Component {
         super(params);
         this.state = {
             infoVisible: false
-        }
+        };
     }
     addItem(title, index) {
         const { actions, filterType, currentDate, currentTag } = this.props;
         // If a tag is selected give the item the new tag - not created date
-        let createdDate, text = null;
+        let createdDate,
+            text = null;
         if (filterType === 'tag') {
             text = '\n' + currentTag;
         } else {
@@ -60,7 +61,8 @@ class List extends Component {
     }
 
     getSortedList() {
-        return this.props.list.sort((a, b) => {
+        // Create copy of array as redux state is immutable and sort it
+        return Array.from(this.props.list).sort((a, b) => {
             if (!!a.completed === !!b.completed) {
                 // If both items are completed sort them in the order
                 // in which they were completed
@@ -81,7 +83,7 @@ class List extends Component {
             return;
         }
         const sourceIndex = result.source.index;
-        const destinationIndex = result.destination.index
+        const destinationIndex = result.destination.index;
         const movingUp = sourceIndex - destinationIndex > 0;
         const prevIndex = movingUp ? destinationIndex - 1 : destinationIndex;
         const nextIndex = movingUp ? destinationIndex : destinationIndex + 1;
@@ -103,7 +105,7 @@ class List extends Component {
     }
 
     render() {
-        if (!this.props.list) return <div>Loading</div>;
+        if (!this.props.list || this.props.loading) return <div>Loading</div>;
 
         const sortedList = this.getSortedList();
         const { selectedListItem } = this.props;

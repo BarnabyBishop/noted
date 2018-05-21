@@ -29,6 +29,43 @@ export async function getList() {
     return data;
 }
 
+const listItemFields = `
+id
+sortOrder
+created
+completed
+title
+text
+height
+createdAt
+updatedAt`;
+
+export async function getListByDate(date) {
+    const response = await client.query({
+        query: gql`
+            query Query {
+                itemByDate(date: "${date}") {
+                    ${listItemFields}
+                }
+            }
+        `
+    });
+    return response.data.itemByDate;
+}
+
+export async function getListBySearch(term) {
+    const response = await client.query({
+        query: gql`
+            query Query {
+                itemBySearch(term: "${term}") {
+                    ${listItemFields}
+                }
+            }
+        `
+    });
+    return response.data.itemBySearch;
+}
+
 export async function getTags() {
     const response = await client.query({
         query: gql`
