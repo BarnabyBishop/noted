@@ -32,7 +32,7 @@ export const updateListItem = (id, title, height) => ({
     height
 });
 
-export const updateListItemText = (id) => ({
+export const updateListItemText = id => ({
     type: 'UPDATE_LIST_ITEM_TEXT',
     id
 });

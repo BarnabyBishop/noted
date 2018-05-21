@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import "./search.css";
+import React, { Component } from 'react';
+import './search.css';
 
 export default class Search extends Component {
     onChange(e) {
@@ -8,8 +8,13 @@ export default class Search extends Component {
     render() {
         return (
             <div className="search column-right">
-                <i className="fas fa-search"></i>
-                <input className="search--input" type="text" onChange={this.onChange.bind(this)} value={this.props.search} />
+                <i className="fas fa-search" />
+                <input
+                    className="search--input"
+                    type="text"
+                    onChange={this.onChange.bind(this)}
+                    value={this.props.search}
+                />
             </div>
         );
     }

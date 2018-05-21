@@ -8,7 +8,7 @@ import reduxLogger from './middleware/redux-logger';
 import saveListItem from './middleware/save-list-item';
 import getList from './middleware/get-list';
 import getTags from './middleware/get-tags';
-import { getList as getListAction } from './actions/list';
+import { setDate } from './actions/app';
 import { getTags as getTagsAction } from './actions/tags';
 import './index.css';
 
@@ -20,7 +20,7 @@ const init = async () => {
     );
 
     // Get initial data
-    store.dispatch(getListAction());
+    store.dispatch(setDate(new Date()));
     store.dispatch(getTagsAction());
 
     render(

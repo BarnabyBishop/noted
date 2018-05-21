@@ -1,24 +1,24 @@
-import React, { Component } from "react";
-import moment from "moment";
-import "./date-picker.css";
+import React, { Component } from 'react';
+import moment from 'moment';
+import './date-picker.css';
 
 class DatePicker extends Component {
     previous() {
         const previousDate = moment(this.props.currentDate)
-            .subtract(1, "days")
+            .subtract(1, 'days')
             .toDate();
         this.props.actions.setDate(previousDate);
     }
 
     next() {
         const nextDate = moment(this.props.currentDate)
-            .add(1, "days")
+            .add(1, 'days')
             .toDate();
         this.props.actions.setDate(nextDate);
     }
 
     setDate() {
-        this.props.actions.setDateFilter();
+        this.props.actions.setDate(new Date());
     }
 
     render() {
@@ -27,11 +27,11 @@ class DatePicker extends Component {
             return (
                 <div className="date-picker">
                     <div className="prev" onClick={this.previous.bind(this)}>
-                        <i className="fas fa-arrow-left"></i>
+                        <i className="fas fa-arrow-left" />
                     </div>
-                    <div onClick={this.setDate.bind(this)}>{currentDate.format("ddd, Do MMM")}</div>
+                    <div onClick={this.setDate.bind(this)}>{currentDate.format('ddd, Do MMM')}</div>
                     <div className="next" onClick={this.next.bind(this)}>
-                        <i className="fas fa-arrow-right"></i>
+                        <i className="fas fa-arrow-right" />
                     </div>
                 </div>
             );
@@ -40,7 +40,7 @@ class DatePicker extends Component {
         return (
             <div className="date-picker">
                 <div className="date-picker--calendar" onClick={this.setDate.bind(this)}>
-                    <i className="fas fa-calendar-alt"></i>
+                    <i className="fas fa-calendar-alt" />
                 </div>
             </div>
         );

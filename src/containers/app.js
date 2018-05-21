@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import DatePicker from '../components/date-picker';
 import TagPicker from '../components/tag-picker';
 import List from '../components/list';
@@ -10,7 +9,7 @@ import Search from '../components/search';
 import * as listActions from '../actions/list';
 import * as appActions from '../actions/app';
 
-const App = ({ actions, currentList, list, tags, tag, date, search, selectedListItem, filterType }) => {
+const App = ({ actions, list, tags, tag, date, search, selectedListItem, loading, filterType }) => {
     return (
         <div className="app">
             <div className="header">
@@ -21,7 +20,15 @@ const App = ({ actions, currentList, list, tags, tag, date, search, selectedList
                 <Search actions={actions} list={list} search={search} />
             </div>
             <div className="content">
-                <List actions={actions} list={currentList} filterType={filterType} currentDate={date} currentTag={tag} selectedListItem={selectedListItem} />
+                <List
+                    actions={actions}
+                    list={list}
+                    filterType={filterType}
+                    currentDate={date}
+                    currentTag={tag}
+                    selectedListItem={selectedListItem}
+                    loading={loading}
+                />
                 <Details actions={actions} selectedListItem={selectedListItem} />
             </div>
         </div>
@@ -33,53 +40,18 @@ App.propTypes = {
     actions: PropTypes.object.isRequired
 };
 
-const filterListByDate = (list, date) => {
-    return list.filter(
-        item =>
-            item.created && (
-                moment(date).isSame(item.created, 'day') ||
-                moment(date).isBetween(item.created, item.completed, 'day', '[]')
-            )
-    );
-}
-
-const filterListByText = (list, text) => {
-    const loweredText = text.toLowerCase();
-    return list.filter(
-        item =>
-            (item.title && item.title.toLowerCase().indexOf(loweredText) > -1) ||
-            (item.text && item.text.toLowerCase().indexOf(loweredText) > -1)
-    );
-}
-
-const getFilteredList = (appState, list) => {
-    if (!list || !list.length) return null;
-
-    switch (appState.filterType) {
-        case 'date':
-            return filterListByDate(list, appState.date);
-        case 'search':
-            return filterListByText(list, appState.search);
-        case 'tag':
-            return filterListByText(list, appState.tag);
-        default:
-            return null;
-    }
-}
-
 const mapStateToProps = state => {
-    const currentList = getFilteredList(state.app, state.list);
     const selectedListItemId = state.app.selectedListItemId;
-    const selectedListItem = selectedListItemId && currentList.find(item => item.id === selectedListItemId);
+    const selectedListItem = selectedListItemId && state.list.find(item => item.id === selectedListItemId);
     return {
         date: state.app.date,
         tag: state.app.tag,
         search: state.app.search,
         filterType: state.app.filterType,
-        currentList,
         list: state.list,
         tags: state.tags,
-        selectedListItem
+        selectedListItem,
+        loading: state.app.loading
     };
 };
 
