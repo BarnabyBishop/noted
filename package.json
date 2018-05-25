@@ -81,8 +81,9 @@
     "scripts": {
         "start": "NODE_PORT=4321 NODE_ENV='development' nodemon src/start-dev.js --watch server --exec babel-node",
         "build-client": "node src/build.js",
-        "build-server": "NODE_ENV='production' babel server --out-dir build/server --ignore node_modules",
-        "build": "npm run build-client && npm run build-server",
+        "build-server":
+            "NODE_ENV='production' babel server --out-dir build/server --ignore node_modules && cp server/package* build/server",
+        "build": "rm -rf build && npm run build-client && npm run build-server",
         "test": "node scripts/test.js --env=jsdom",
         "electron": "npm run build-client && npm run build-server && electron .",
         "run-server": "NODE_PORT=4321 NODE_ENV='production' pm2 start server"
@@ -91,15 +92,9 @@
         "extends": "react-app"
     },
     "jest": {
-        "collectCoverageFrom": [
-            "src/**/*.{js,jsx}"
-        ],
-        "setupFiles": [
-            "<rootDir>/config/polyfills.js"
-        ],
-        "testPathIgnorePatterns": [
-            "<rootDir>[/\\\\](build|docs|node_modules)[/\\\\]"
-        ],
+        "collectCoverageFrom": ["src/**/*.{js,jsx}"],
+        "setupFiles": ["<rootDir>/config/polyfills.js"],
+        "testPathIgnorePatterns": ["<rootDir>[/\\\\](build|docs|node_modules)[/\\\\]"],
         "testEnvironment": "node",
         "testURL": "http://localhost",
         "transform": {
@@ -107,17 +102,13 @@
             "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
             "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
         },
-        "transformIgnorePatterns": [
-            "[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"
-        ],
+        "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$"],
         "moduleNameMapper": {
             "^react-native$": "react-native-web"
         }
     },
     "babel": {
-        "presets": [
-            "react-app"
-        ]
+        "presets": ["react-app"]
     },
     "proxy": "http://localhost:4321"
 }

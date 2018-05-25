@@ -4,7 +4,7 @@ import ApolloClient from 'apollo-boost';
 import gql from 'graphql-tag';
 
 const client = new ApolloClient({
-    uri: `/graphql${location.search}`
+    uri: `/api/graphql${location.search}`
 });
 
 export async function saveListItem(listItem) {

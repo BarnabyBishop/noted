@@ -14,10 +14,10 @@ export default data => {
     router.get('/api/get-tags', getTagsRoute);
     router.post('/api/save-list-item', saveListItemRoute);
     // koaBody is needed just for POST.
-    router.post('/graphql', bodyParser(), graphqlKoa({ schema: data.schema }));
-    router.get('/graphql', graphqlKoa({ schema: data.schema }));
+    router.post('/api/graphql', bodyParser(), graphqlKoa({ schema: data.schema }));
+    router.get('/api/graphql', graphqlKoa({ schema: data.schema }));
 
-    router.get('/graphiql', graphiqlKoa({ endpointURL: '/graphql' }));
+    router.get('/api/graphiql', graphiqlKoa({ endpointURL: '/api/graphql' }));
 
     return router;
 };
