@@ -31,6 +31,20 @@ export default dbHost => {
         }
     });
 
+    const User = sequelize.define('user', {
+        id: {
+            type: Sequelize.UUID,
+            defaultValue: Sequelize.UUIDV4,
+            primaryKey: true
+        },
+        email: {
+            type: Sequelize.TEXT
+        },
+        password: {
+            type: Sequelize.TEXT
+        }
+    });
+
     // The GraphQL schema in string form
     const typeDefs = `
         type ListItem {
@@ -101,5 +115,5 @@ export default dbHost => {
         resolvers
     });
 
-    return { sequelize, ListItem, schema };
+    return { sequelize, ListItem, User, schema };
 };
