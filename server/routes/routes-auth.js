@@ -14,5 +14,9 @@ export default data => {
     router.post('/api/save-list-item', saveListItemRoute);
     router.use('/api/graphql', graphqlExpress({ schema: data.schema }));
 
+    router.get('/secret', passport.authenticate('jwt', { session: false }), (req, res) => {
+        res.json({ message: 'Success! You can not see this without a token' });
+    });
+
     return router;
 };

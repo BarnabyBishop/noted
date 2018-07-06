@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
-import { graphiqlExpress } from 'apollo-server-express';
+import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 const router = express.Router();
 
 // Calling as a function so the GraphQL schema is available
@@ -29,11 +29,11 @@ export default (data, jwtOptions) => {
         }
     });
 
-    router.get('/secret', passport.authenticate('jwt', { session: false }), (req, res) => {
-        res.json({ message: 'Success! You can not see this without a token' });
-    });
-
-    router.get('/graphiql', graphiqlExpress({ endpointURL: '/api/graphql' }));
+    // Dev tools for debug, only available on development due to lack of security
+    if (process.env.NODE_ENV === 'development') {
+        router.get('/graphiql', graphiqlExpress({ endpointURL: '/api/graphiql' }));
+        router.use('/api/graphiql', graphqlExpress({ schema: data.schema }));
+    }
 
     return router;
 };
