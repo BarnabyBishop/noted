@@ -1,11 +1,36 @@
-require('isomorphic-fetch');
-
 import ApolloClient from 'apollo-boost';
 import gql from 'graphql-tag';
+import store from '../utils/store';
+import { getAuthStorage } from '../utils/local-storage';
 
 const client = new ApolloClient({
-    uri: `/api/graphql${location.search}`
+    uri: `/api/graphql${location.search}`,
+    request: operation => {
+        operation.setContext({
+            headers: {
+                authorization: `Bearer ${getAuthStorage()}`
+            }
+        });
+    },
+    onError: ({ graphQLErrors, networkError }) => {
+        if (networkError && networkError.statusCode === 401) {
+            store.dispatch({ type: 'SET_AUTH_TOKEN', authToken: null });
+        }
+    }
 });
+
+export async function login(email, password) {
+    const response = await fetch(`/api/login${location.search}`, {
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({ email, password })
+    });
+    if (response.status >= 400) {
+        throw new Error('Bad response from server');
+    }
+    const details = await response.json();
+    return details;
+}
 
 export async function saveListItem(listItem) {
     const response = await fetch(`/api/save-list-item${location.search}`, {

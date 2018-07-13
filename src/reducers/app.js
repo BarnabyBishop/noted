@@ -12,7 +12,8 @@ const initialState = {
     tag: null,
     filterType: filterTypes.date,
     selectedListItemId: null,
-    loading: true
+    loading: true,
+    authToken: null
 };
 
 const app = (state = initialState, action) => {
@@ -53,6 +54,11 @@ const app = (state = initialState, action) => {
             return {
                 ...state,
                 selectedListItemId: action.itemId
+            };
+        case 'SET_AUTH_TOKEN':
+            return {
+                ...state,
+                authToken: action.authToken
             };
         default:
             return state;

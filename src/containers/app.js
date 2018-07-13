@@ -1,38 +1,13 @@
+import ListLayout from '../components/list-layout';
+import LoginForm from '../components/login-form';
 import React, { PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import DatePicker from '../components/date-picker';
-import TagPicker from '../components/tag-picker';
-import List from '../components/list';
-import Details from '../components/details';
-import Search from '../components/search';
 import * as listActions from '../actions/list';
 import * as appActions from '../actions/app';
 
-const App = ({ actions, list, tags, tag, date, search, selectedListItem, loading, filterType }) => {
-    return (
-        <div className="app">
-            <div className="header">
-                <div className="filters column-left">
-                    <TagPicker actions={actions} tags={tags} currentTag={tag} />
-                    <DatePicker actions={actions} filterType={filterType} currentDate={date} />
-                </div>
-                <Search actions={actions} list={list} search={search} />
-            </div>
-            <div className="content">
-                <List
-                    actions={actions}
-                    list={list}
-                    filterType={filterType}
-                    currentDate={date}
-                    currentTag={tag}
-                    selectedListItem={selectedListItem}
-                    loading={loading}
-                />
-                <Details actions={actions} selectedListItem={selectedListItem} />
-            </div>
-        </div>
-    );
+const App = props => {
+    return <div className="app">{props.authorized ? <ListLayout {...props} /> : <LoginForm {...props} />}</div>;
 };
 
 App.propTypes = {
@@ -51,7 +26,8 @@ const mapStateToProps = state => {
         list: state.list,
         tags: state.tags,
         selectedListItem,
-        loading: state.app.loading
+        loading: state.app.loading,
+        authorized: !!state.app.authToken
     };
 };
 
@@ -59,4 +35,7 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators({ ...listActions, ...appActions }, dispatch)
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(App);

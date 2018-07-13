@@ -1,8 +1,9 @@
 import express from 'express';
-import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
 const router = express.Router();
+
+const tokenLength = 10000; // in ms
 
 // Calling as a function so the GraphQL schema is available
 export default (data, jwtOptions) => {
@@ -10,7 +11,7 @@ export default (data, jwtOptions) => {
         res.send(200);
     });
 
-    router.post('/login', async (req, res) => {
+    router.post('/api/login', async (req, res) => {
         const { email, password } = req.body;
 
         const user = await data.User.findOne({ where: { email, password } });
@@ -18,18 +19,17 @@ export default (data, jwtOptions) => {
             res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // Will hash eventually..
+        // Check password hash with password (to do)..
         if (user.password === password) {
             const payload = { id: user.id };
-            console.log(payload);
-            const token = jwt.sign(payload, jwtOptions.secretOrKey);
+            const token = jwt.sign(payload, jwtOptions.secretOrKey, { expiresIn: 10 });
             res.json({ token });
         } else {
             res.status(401).json({ message: 'Invalid credentials' });
         }
     });
 
-    // Dev tools for debug, only available on development due to lack of security
+    // Dev tools for GQL debug, only available on development due to lack of security
     if (process.env.NODE_ENV === 'development') {
         router.get('/graphiql', graphiqlExpress({ endpointURL: '/api/graphiql' }));
         router.use('/api/graphiql', graphqlExpress({ schema: data.schema }));
