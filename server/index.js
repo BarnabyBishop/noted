@@ -8,7 +8,7 @@ import chalk from 'chalk';
 import passport from 'passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import getAuthRouter from './routes/routes-auth';
-import getNoAuthRouter from './routes/routes-noauth';
+import getUnAuthRouter from './routes/routes-unauth';
 import initData from './data';
 
 const DEFAULT_NODE_PORT = process.env.NODE_PORT || 4321;
@@ -20,7 +20,6 @@ app.use(bodyParser.json());
 
 const jwtOptions = {};
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-// Get this from config and make real secret
 jwtOptions.secretOrKey = process.env.TOKEN_SECRET;
 
 passport.use(
@@ -37,8 +36,8 @@ passport.use(
 
 app.use(passport.initialize());
 
-const noAuthRouter = getNoAuthRouter(data, jwtOptions);
-const authRouter = getAuthRouter(data);
+const noAuthRouter = getUnAuthRouter(data, jwtOptions);
+const authRouter = getAuthRouter(data, jwtOptions);
 
 app.use(noAuthRouter);
 app.use(authRouter);

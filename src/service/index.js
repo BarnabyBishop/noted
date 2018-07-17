@@ -1,22 +1,54 @@
-import ApolloClient from 'apollo-boost';
+require('isomorphic-fetch'); // Required for iOS
+
+import { ApolloClient } from 'apollo-client';
+import { InMemoryCache } from 'apollo-cache-inmemory';
+import { HttpLink } from 'apollo-link-http';
+import { onError } from 'apollo-link-error';
+import { ApolloLink } from 'apollo-link';
+import { setContext } from 'apollo-link-context';
+
 import gql from 'graphql-tag';
 import store from '../utils/store';
-import { getAuthStorage } from '../utils/local-storage';
+
+const middlewareLink = setContext(() => {
+    return { headers: { authorization: `Bearer ${store.getState().app.authToken}` } };
+});
+
+const afterwareLink = new ApolloLink((operation, forward) => {
+    return forward(operation).map(response => {
+        const {
+            response: { headers }
+        } = operation.getContext();
+        if (headers) {
+            store.dispatch({ type: 'SET_AUTH_TOKEN', authToken: headers.get('auth-token') });
+        }
+
+        return response;
+    });
+});
 
 const client = new ApolloClient({
-    uri: `/api/graphql${location.search}`,
-    request: operation => {
-        operation.setContext({
-            headers: {
-                authorization: `Bearer ${getAuthStorage()}`
+    link: ApolloLink.from([
+        onError(({ graphQLErrors, networkError }) => {
+            if (graphQLErrors)
+                graphQLErrors.map(({ message, locations, path }) =>
+                    console.log(`[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`)
+                );
+            if (networkError) {
+                if (networkError.statusCode === 401) {
+                    store.dispatch({ type: 'SET_AUTH_TOKEN', authToken: null });
+                } else {
+                    console.log(`[Network error]: ${networkError}`);
+                }
             }
-        });
-    },
-    onError: ({ graphQLErrors, networkError }) => {
-        if (networkError && networkError.statusCode === 401) {
-            store.dispatch({ type: 'SET_AUTH_TOKEN', authToken: null });
-        }
-    }
+        }),
+        afterwareLink,
+        middlewareLink,
+        new HttpLink({
+            uri: '/api/graphql'
+        })
+    ]),
+    cache: new InMemoryCache()
 });
 
 export async function login(email, password) {
@@ -28,8 +60,8 @@ export async function login(email, password) {
     if (response.status >= 400) {
         throw new Error('Bad response from server');
     }
-    const details = await response.json();
-    return details;
+    const { headers } = response;
+    return headers.get('auth-token');
 }
 
 export async function saveListItem(listItem) {

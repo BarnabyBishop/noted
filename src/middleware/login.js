@@ -6,11 +6,10 @@ export default store => next => async action => {
 
     next({ type: 'LOGGING_IN' });
 
-    const data = await login(action.email, action.password);
-    console.log({ data });
-    if (data && data.token) {
-        setAuthStorage(data.token);
-        return next({ type: 'SET_AUTH_TOKEN', authToken: data.token });
+    const authToken = await login(action.email, action.password);
+    if (authToken) {
+        setAuthStorage(authToken);
+        return next({ type: 'SET_AUTH_TOKEN', authToken: authToken });
     }
 
     return next({ type: 'LOGIN_FAILED' });

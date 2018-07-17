@@ -18,8 +18,18 @@ export default class LoginForm extends React.Component {
     render() {
         return (
             <div className="form">
-                <input type="text" placeholder="Email" onInput={this.updateField.bind(this, 'email')} />
-                <input type="password" placeholder="Password" onInput={this.updateField.bind(this, 'password')} />
+                <input
+                    type="text"
+                    placeholder="Email"
+                    onInput={this.updateField.bind(this, 'email')}
+                    value={this.state.email}
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    onInput={this.updateField.bind(this, 'password')}
+                    value={this.state.password}
+                />
                 <button type="submit" onClick={this.login.bind(this)} />
             </div>
         );

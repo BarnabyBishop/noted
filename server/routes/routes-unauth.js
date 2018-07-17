@@ -1,9 +1,8 @@
 import express from 'express';
-import jwt from 'jsonwebtoken';
 import { graphqlExpress, graphiqlExpress } from 'apollo-server-express';
-const router = express.Router();
+import createToken from '../utils/create-token';
 
-const tokenLength = 10000; // in ms
+const router = express.Router();
 
 // Calling as a function so the GraphQL schema is available
 export default (data, jwtOptions) => {
@@ -21,9 +20,9 @@ export default (data, jwtOptions) => {
 
         // Check password hash with password (to do)..
         if (user.password === password) {
-            const payload = { id: user.id };
-            const token = jwt.sign(payload, jwtOptions.secretOrKey, { expiresIn: 10 });
-            res.json({ token });
+            const token = createToken(user, jwtOptions);
+            res.set('auth-token', token);
+            res.status(200).send();
         } else {
             res.status(401).json({ message: 'Invalid credentials' });
         }
