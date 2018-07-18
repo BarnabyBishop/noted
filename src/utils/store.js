@@ -5,11 +5,12 @@ import saveListItem from '../middleware/save-list-item';
 import getList from '../middleware/get-list';
 import getTags from '../middleware/get-tags';
 import login from '../middleware/login';
+import authToken from '../middleware/auth-token';
 
 const store = createStore(
     reducer,
     {}, // no initial state
-    applyMiddleware(reduxLogger, getList, getTags, login, saveListItem)
+    applyMiddleware(reduxLogger, login, authToken, getList, getTags, saveListItem)
 );
 
 export default store;
