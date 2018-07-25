@@ -24,8 +24,7 @@ jwtOptions.secretOrKey = process.env.TOKEN_SECRET;
 
 passport.use(
     new Strategy(jwtOptions, async (jwtPayload, next) => {
-        // going to database required? if JWT is valid should just check expiry..
-        const user = await data.User.findOne({ where: { id: jwtPayload.id } });
+        const user = await data.User.findOne({ where: { id: jwtPayload.userId } });
         if (user) {
             next(null, user);
         } else {

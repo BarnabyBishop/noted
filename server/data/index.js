@@ -63,8 +63,8 @@ export default dbHost => {
         }
         type Query {
             allItems: [ListItem]
-            itemBySearch(term: String): [ListItem],
-            itemByDate(date: String): [ListItem],
+            itemBySearch(userId: ID, term: String): [ListItem],
+            itemByDate(userId: ID, date: String): [ListItem],
             tags: [Tag]
         }
         `;
@@ -77,7 +77,10 @@ export default dbHost => {
             },
             itemBySearch(_, args) {
                 return ListItem.findAll({
-                    where: { $or: [{ title: { $ilike: `%${args.term}%` } }, { text: { $ilike: `%${args.term}%` } }] }
+                    where: {
+                        $or: [{ title: { $ilike: `%${args.term}%` } }, { text: { $ilike: `%${args.term}%` } }],
+                        $and: { user_id: args.userId }
+                    }
                 });
             },
             itemByDate(_, args) {
@@ -89,7 +92,8 @@ export default dbHost => {
                             { created: { $gte: startOfDay, $lt: endOfDay } },
                             [{ created: { $lte: startOfDay } }, { completed: { $gte: endOfDay } }],
                             [{ created: { $lte: startOfDay } }, { completed: null }]
-                        ]
+                        ],
+                        $and: { user_id: args.userId }
                     }
                 });
             },

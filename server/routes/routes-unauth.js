@@ -15,16 +15,16 @@ export default (data, jwtOptions) => {
 
         const user = await data.User.findOne({ where: { email, password } });
         if (!user) {
-            res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'Invalid credentials' });
         }
 
         // Check password hash with password (to do)..
         if (user.password === password) {
             const token = createToken(user, jwtOptions);
             res.set('auth-token', token);
-            res.status(200).send();
+            return res.status(200).send();
         } else {
-            res.status(401).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'Invalid credentials' });
         }
     });
 

@@ -27,7 +27,8 @@ const mapStateToProps = state => {
         tags: state.tags,
         selectedListItem,
         loading: state.app.loading,
-        authorized: !!state.app.authToken
+        authorized: !!state.app.authToken,
+        loginStatus: state.app.loginStatus
     };
 };
 

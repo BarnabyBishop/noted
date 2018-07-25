@@ -58,7 +58,10 @@ export async function login(email, password) {
         body: JSON.stringify({ email, password })
     });
     if (response.status >= 400) {
-        throw new Error('Bad response from server');
+        if (response.status === 401) {
+            return false;
+        }
+        return new Error(response.statusText);
     }
     const { headers } = response;
     return headers.get('auth-token');
@@ -101,7 +104,7 @@ export async function getListByDate(date) {
     const response = await client.query({
         query: gql`
             query Query {
-                itemByDate(date: "${date}") {
+                itemByDate(userId: "${store.getState().app.userId}", date: "${date}") {
                     ${listItemFields}
                 }
             }
@@ -114,7 +117,7 @@ export async function getListBySearch(term) {
     const response = await client.query({
         query: gql`
             query Query {
-                itemBySearch(term: "${term}") {
+                itemBySearch(userId: "${store.getState().app.userId}", term: "${term}") {
                     ${listItemFields}
                 }
             }
@@ -127,7 +130,7 @@ export async function getTags() {
     const response = await client.query({
         query: gql`
             query Query {
-                tags {
+                tags(userId: "${store.getState().app.userId}") {
                     tag
                 }
             }

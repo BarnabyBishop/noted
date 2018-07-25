@@ -1,4 +1,5 @@
 /* General app state */
+import jwtDecode from 'jwt-decode';
 
 const filterTypes = {
     date: 'date',
@@ -55,10 +56,22 @@ const app = (state = initialState, action) => {
                 ...state,
                 selectedListItemId: action.itemId
             };
+        case 'LOGGING_IN':
+            return {
+                ...state,
+                loginStatus: 'LOGGING_IN'
+            };
+        case 'LOGIN_FAILED':
+            return {
+                ...state,
+                loginStatus: 'LOGIN_FAILED'
+            };
         case 'SET_AUTH_TOKEN':
             return {
                 ...state,
-                authToken: action.authToken
+                loginStatus: null,
+                authToken: action.authToken,
+                userId: action.authToken ? jwtDecode(action.authToken).userId : null
             };
         default:
             return state;
