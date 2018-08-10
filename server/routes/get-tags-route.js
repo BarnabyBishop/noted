@@ -20,8 +20,8 @@ what about #one #tw0
 https://jaredforsyth.com/posts/a-reason-react-tutorial/#10-defining-a-component
 */
 
-export default async function(ctx, next) {
-    const { data } = ctx;
+export default async function(req, res) {
+    const data = req.app.get('data');
     const tags = await data.sequelize.query(
         // So close, only match a word boundary, then # then not ^#. or whitespace then match a word, - or /
         // Overly matches https://url.com/#10-defining-a-component
@@ -36,5 +36,5 @@ export default async function(ctx, next) {
     });
 
     const dataModel = { tags: flatTags };
-    ctx.body = dataModel;
+    res.send(dataModel);
 }

@@ -31,6 +31,20 @@ export default dbHost => {
         }
     });
 
+    const User = sequelize.define('user', {
+        id: {
+            type: Sequelize.UUID,
+            defaultValue: Sequelize.UUIDV4,
+            primaryKey: true
+        },
+        email: {
+            type: Sequelize.TEXT
+        },
+        password: {
+            type: Sequelize.TEXT
+        }
+    });
+
     // The GraphQL schema in string form
     const typeDefs = `
         type ListItem {
@@ -49,9 +63,9 @@ export default dbHost => {
         }
         type Query {
             allItems: [ListItem]
-            itemBySearch(term: String): [ListItem],
-            itemByDate(date: String): [ListItem],
-            tags: [Tag]
+            itemBySearch(userId: ID, term: String): [ListItem],
+            itemByDate(userId: ID, date: String): [ListItem],
+            tags(userId: ID): [Tag]
         }
         `;
 
@@ -63,7 +77,10 @@ export default dbHost => {
             },
             itemBySearch(_, args) {
                 return ListItem.findAll({
-                    where: { $or: [{ title: { $ilike: `%${args.term}%` } }, { text: { $ilike: `%${args.term}%` } }] }
+                    where: {
+                        $or: [{ title: { $ilike: `%${args.term}%` } }, { text: { $ilike: `%${args.term}%` } }],
+                        $and: { user_id: args.userId }
+                    }
                 });
             },
             itemByDate(_, args) {
@@ -75,7 +92,8 @@ export default dbHost => {
                             { created: { $gte: startOfDay, $lt: endOfDay } },
                             [{ created: { $lte: startOfDay } }, { completed: { $gte: endOfDay } }],
                             [{ created: { $lte: startOfDay } }, { completed: null }]
-                        ]
+                        ],
+                        $and: { user_id: args.userId }
                     }
                 });
             },
@@ -83,8 +101,8 @@ export default dbHost => {
                 const tags = await ListItem.sequelize.query(
                     // So close, only match a word boundary, then # then not ^#. or whitespace then match a word, - or /
                     // Overly matches https://url.com/#10-defining-a-component
-                    "select distinct regexp_matches(text, '\\Y\\#[\\w\\-\\/]+', 'g') as tag from list_items where text ~ '\\Y\\#[^\\#\\s.][\\w\\-\\/]+' order by tag",
-                    { type: ListItem.sequelize.QueryTypes.SELECT }
+                    "select distinct regexp_matches(text, '\\Y\\#[\\w\\-\\/]+', 'g') as tag from list_items where text ~ '\\Y\\#[^\\#\\s.][\\w\\-\\/]+' and user_id = ? order by tag",
+                    { replacements: [args.userId], type: ListItem.sequelize.QueryTypes.SELECT }
                 );
 
                 // This regexp_matches returns a text array which gives us an unfriendly object of nested arrays. Flatten them out
@@ -101,5 +119,5 @@ export default dbHost => {
         resolvers
     });
 
-    return { sequelize, ListItem, schema };
+    return { sequelize, ListItem, User, schema };
 };

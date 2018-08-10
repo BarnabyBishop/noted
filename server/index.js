@@ -2,41 +2,45 @@
 /*** Initialise server ***/
 /*************************/
 require('dotenv').config({ silent: true });
-import Koa from 'koa';
-import views from 'koa-views';
-import bodyParser from 'koa-bodyparser';
+import express from 'express';
+import bodyParser from 'body-parser';
 import chalk from 'chalk';
-import buildRouter from './routes';
+import passport from 'passport';
+import { Strategy, ExtractJwt } from 'passport-jwt';
+import getAuthRouter from './routes/routes-auth';
+import getUnAuthRouter from './routes/routes-unauth';
 import initData from './data';
-import error from './middleware/error';
-import auth from './middleware/auth';
 
 const DEFAULT_NODE_PORT = process.env.NODE_PORT || 4321;
 const data = initData(process.env.DB_HOST);
 
-const app = new Koa();
+const app = express();
 
-const router = buildRouter(data);
+app.use(bodyParser.json());
 
-Object.assign(app.context, {
-    data,
-    authToken: process.env.AUTH_TOKEN
-});
+const jwtOptions = {};
+jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
+jwtOptions.secretOrKey = process.env.TOKEN_SECRET;
 
-// body parser
-app.use(bodyParser());
+passport.use(
+    new Strategy(jwtOptions, async (jwtPayload, next) => {
+        const user = await data.User.findOne({ where: { id: jwtPayload.userId } });
+        if (user) {
+            next(null, user);
+        } else {
+            next(null, false);
+        }
+    })
+);
 
-// Setup views
-app.use(views('./public'));
+app.use(passport.initialize());
 
-// basic error handling
-app.use(error);
+const noAuthRouter = getUnAuthRouter(data, jwtOptions);
+const authRouter = getAuthRouter(data, jwtOptions);
 
-app.use(auth);
+app.use(noAuthRouter);
+app.use(authRouter);
 
-app.use(router.routes());
-app.use(router.allowedMethods());
+app.set('data', data);
 
-app.listen(DEFAULT_NODE_PORT, () => {
-    console.log(chalk.green(`API server listening on ${DEFAULT_NODE_PORT}.`));
-});
+app.listen(DEFAULT_NODE_PORT, () => console.log(chalk.green(`📡 API server listening on ${DEFAULT_NODE_PORT}.`)));
