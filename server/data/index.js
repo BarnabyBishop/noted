@@ -65,7 +65,7 @@ export default dbHost => {
             allItems: [ListItem]
             itemBySearch(userId: ID, term: String): [ListItem],
             itemByDate(userId: ID, date: String): [ListItem],
-            tags: [Tag]
+            tags(userId: ID): [Tag]
         }
         `;
 
@@ -101,8 +101,8 @@ export default dbHost => {
                 const tags = await ListItem.sequelize.query(
                     // So close, only match a word boundary, then # then not ^#. or whitespace then match a word, - or /
                     // Overly matches https://url.com/#10-defining-a-component
-                    "select distinct regexp_matches(text, '\\Y\\#[\\w\\-\\/]+', 'g') as tag from list_items where text ~ '\\Y\\#[^\\#\\s.][\\w\\-\\/]+' order by tag",
-                    { type: ListItem.sequelize.QueryTypes.SELECT }
+                    "select distinct regexp_matches(text, '\\Y\\#[\\w\\-\\/]+', 'g') as tag from list_items where text ~ '\\Y\\#[^\\#\\s.][\\w\\-\\/]+' and user_id = ? order by tag",
+                    { replacements: [args.userId], type: ListItem.sequelize.QueryTypes.SELECT }
                 );
 
                 // This regexp_matches returns a text array which gives us an unfriendly object of nested arrays. Flatten them out
