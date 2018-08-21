@@ -10,6 +10,10 @@ export default dbHost => {
             defaultValue: Sequelize.UUIDV4,
             primaryKey: true
         },
+        userId: {
+            type: Sequelize.UUID,
+            field: 'user_id'
+        },
         sortOrder: {
             type: Sequelize.INTEGER,
             field: 'sort_order'

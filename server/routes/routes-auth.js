@@ -20,7 +20,7 @@ export default (data, jwtOptions) => {
     });
 
     // This needs to be removed and converted to gql mutations
-    router.post('/api/save-list-item', saveListItemRoute);
+    router.post('/api/save-list-item', (req, res) => saveListItemRoute(req, res, data));
     router.use('/api/graphql', graphqlExpress({ schema: data.schema }));
 
     router.get('/secret', passport.authenticate('jwt', { session: false }), (req, res) => {

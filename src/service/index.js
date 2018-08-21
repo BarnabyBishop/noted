@@ -70,7 +70,10 @@ export async function login(email, password) {
 export async function saveListItem(listItem) {
     const response = await fetch(`/api/save-list-item${location.search}`, {
         method: 'POST',
-        headers: new Headers({ 'Content-Type': 'application/json' }),
+        headers: new Headers({
+            'Content-Type': 'application/json',
+            authorization: `Bearer ${store.getState().app.authToken}`
+        }),
         body: JSON.stringify(listItem)
     });
     if (response.status >= 400) {
