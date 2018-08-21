@@ -1,5 +1,3 @@
-import buildEditorState from '../utils/editor-state';
-
 const list = (state = [], action) => {
     switch (action.type) {
         case 'GOT_LIST':
@@ -17,33 +15,13 @@ const list = (state = [], action) => {
                     sortOrder: action.sortOrder
                 }
             ];
-        case 'SET_SELECTED_LIST_ITEM':
-            return state.map(item => {
-                if (item.id === action.itemId) {
-                    return {
-                        ...item,
-                        editorState: buildEditorState(item.text)
-                    };
-                }
-                return item;
-            });
         case 'UPDATE_LIST_ITEM_TEXT':
             return state.map(item => {
                 if (item.id === action.id) {
                     return {
                         ...item,
-                        text: item.editorState.getCurrentContent().getPlainText()
-                    };
-                }
-                return item;
-            });
-        case 'UPDATE_LIST_ITEM_EDITORSTATE':
-            return state.map(item => {
-                if (item.id === action.id) {
-                    return {
-                        ...item,
-                        dirty: true,
-                        editorState: action.editorState
+                        text: action.text,
+                        dirty: true
                     };
                 }
                 return item;

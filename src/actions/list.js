@@ -13,12 +13,6 @@ export const addListItem = (title, created, sortOrder, text) => ({
     sortOrder
 });
 
-export const updateListItemEditorState = (id, editorState) => ({
-    type: 'UPDATE_LIST_ITEM_EDITORSTATE',
-    id,
-    editorState
-});
-
 export const updateListItemSortOrder = (id, sortOrder) => ({
     type: 'UPDATE_LIST_ITEM_SORT_ORDER',
     id,
@@ -32,9 +26,10 @@ export const updateListItem = (id, title, height) => ({
     height
 });
 
-export const updateListItemText = id => ({
+export const updateListItemText = (id, text) => ({
     type: 'UPDATE_LIST_ITEM_TEXT',
-    id
+    id,
+    text
 });
 
 export const saveListItem = id => ({

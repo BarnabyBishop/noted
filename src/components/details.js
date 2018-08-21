@@ -1,21 +1,35 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
-import './details.css';
 import { Editor, EditorState, RichUtils, AtomicBlockUtils } from 'draft-js';
+import styled from 'styled-components';
+import moment from 'moment';
+import buildEditorState from '../utils/editor-state';
+import './details.css';
 
 export default class Details extends Component {
     constructor(props) {
         super(props);
+        const text = props.selectedListItem ? props.selectedListItem.text : '';
 
         this.state = {
-            dragging: false
+            dragging: false,
+            editorState: buildEditorState(text)
         };
         this.focus = () => this.refs.editor.focus();
         this.autosave = null;
     }
 
+    componentDidUpdate(prevProps) {
+        const { selectedListItem } = this.props;
+        if (
+            selectedListItem &&
+            (!prevProps.selectedListItem || selectedListItem.id !== prevProps.selectedListItem.id)
+        ) {
+            this.setState({ editorState: buildEditorState(selectedListItem.text) });
+        }
+    }
+
     onChange(editorState) {
-        this.props.actions.updateListItemEditorState(this.props.selectedListItem.id, editorState);
+        this.setState({ editorState });
         clearTimeout(this.autosave);
         this.autosave = setTimeout(this.save.bind(this), 1000);
     }
@@ -25,13 +39,16 @@ export default class Details extends Component {
     }
 
     save() {
-        this.props.actions.updateListItemText(this.props.selectedListItem.id);
-        this.props.actions.saveListItem(this.props.selectedListItem.id);
+        const plainText = this.state.editorState.getCurrentContent().getPlainText();
+        if (this.props.selectedListItem && this.props.selectedListItem.text !== plainText) {
+            this.props.actions.updateListItemText(this.props.selectedListItem.id, plainText);
+            this.props.actions.saveListItem(this.props.selectedListItem.id);
+        }
     }
 
     onTab(e) {
         const maxDepth = 4;
-        this.onChange(RichUtils.onTab(e, this.props.editorState, maxDepth));
+        this.onChange(RichUtils.onTab(e, this.state.editorState, maxDepth));
     }
 
     onDragEnter(e) {
@@ -72,7 +89,7 @@ export default class Details extends Component {
 
     insertImage(e) {
         const imageSrc = e.target.result;
-        const { editorState } = this.props;
+        const { editorState } = this.state;
         const contentState = editorState.getCurrentContent();
         const contentStateWithEntity = contentState.createEntity('image', 'IMMUTABLE', {
             src: imageSrc,
@@ -114,21 +131,14 @@ export default class Details extends Component {
                 </div>
             );
 
-        const {
-            editorState,
-            id,
-            title,
-            height,
-            completed,
-            created,
-            sortOrder,
-            createdAt,
-            updatedAt
-        } = this.props.selectedListItem;
+        const { id, title, height, completed, created, sortOrder, createdAt, updatedAt } = this.props.selectedListItem;
+
+        const { editorState } = this.state;
 
         return (
             <div className="details">
                 <InfoPanel>
+                    <InfoUpdatedAt>{updatedAt && `Saved ${moment().to(updatedAt)}`}</InfoUpdatedAt>
                     <InfoIcon className="fas fa-info">
                         <ItemRaw>
                             <div>id: {id}</div>
@@ -179,7 +189,8 @@ const InfoPanel = styled.div`
     background-color: #f1f2f3;
     width: 100%;
     padding: 5px;
-    text-align: right;
+    display: flex;
+    justify-content: space-between;
 `;
 
 const ItemRaw = styled.div`
@@ -207,4 +218,9 @@ const InfoIcon = styled.i`
     &:hover ${ItemRaw} {
         display: block;
     }
+`;
+
+const InfoUpdatedAt = styled.div`
+    font-size: 8pt;
+    color: #999;
 `;
