@@ -6,6 +6,7 @@ import { getMiddleSortOrder } from '../utils/sort-utils';
 import TextInput from './text-input';
 import Checkbox from './checkbox';
 import './list.css';
+import Loader from './loader';
 
 class List extends Component {
     constructor(params) {
@@ -14,6 +15,7 @@ class List extends Component {
             infoVisible: false
         };
     }
+
     addItem(title, index) {
         const { actions, filterType, currentDate, currentTag } = this.props;
         // If a tag is selected give the item the new tag - not created date
@@ -105,7 +107,7 @@ class List extends Component {
     }
 
     render() {
-        if (!this.props.list || this.props.loading) return <div>Loading</div>;
+        if (!this.props.list || this.props.loading) return <Loader />;
 
         const sortedList = this.getSortedList();
         const { selectedListItem } = this.props;
@@ -113,7 +115,7 @@ class List extends Component {
             <DragDropContext onDragEnd={this.onDragEnd.bind(this)}>
                 <Droppable droppableId="droppable">
                     {(provided, snapshot) => (
-                        <div className="list column-left" ref={provided.innerRef}>
+                        <div className="list" ref={provided.innerRef}>
                             {sortedList.map((item, index) => (
                                 <Draggable key={item.id} draggableId={item.id} index={index}>
                                     {(provided, snapshot) => (

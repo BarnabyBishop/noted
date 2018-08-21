@@ -7,7 +7,7 @@ export default class Search extends Component {
     }
     render() {
         return (
-            <div className="search column-right">
+            <div className="search">
                 <i className="fas fa-search" />
                 <input
                     className="search--input"

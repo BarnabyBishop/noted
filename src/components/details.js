@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import './details.css';
 import { Editor, EditorState, RichUtils, AtomicBlockUtils } from 'draft-js';
-
-
 
 export default class Details extends Component {
     constructor(props) {
@@ -108,11 +107,41 @@ export default class Details extends Component {
     }
 
     render() {
-        if (!this.props.selectedListItem) return <div className="details column-right"><em>Select an item.</em></div>;
+        if (!this.props.selectedListItem)
+            return (
+                <div className="details">
+                    <em>Select an item.</em>
+                </div>
+            );
 
-        const { editorState } = this.props.selectedListItem;
+        const {
+            editorState,
+            id,
+            title,
+            height,
+            completed,
+            created,
+            sortOrder,
+            createdAt,
+            updatedAt
+        } = this.props.selectedListItem;
+
         return (
-            <div className="details column-right">
+            <div className="details">
+                <InfoPanel>
+                    <InfoIcon className="fas fa-info">
+                        <ItemRaw>
+                            <div>id: {id}</div>
+                            <div>title: {title}</div>
+                            <div>height: {height}</div>
+                            <div>sortOrder: {sortOrder}</div>
+                            <div>completed: {completed && completed.toString()}</div>
+                            <div>created: {created && created.toString()}</div>
+                            <div>createdAt: {createdAt && createdAt.toString()}</div>
+                            <div>updatedAt: {updatedAt && updatedAt.toString()}</div>
+                        </ItemRaw>
+                    </InfoIcon>
+                </InfoPanel>
                 <div className="RichEditor-root">
                     <div
                         className="RichEditor-editor"
@@ -137,7 +166,6 @@ export default class Details extends Component {
     }
 }
 
-
 function getBlockStyle(block) {
     switch (block.getType()) {
         case 'blockquote':
@@ -147,3 +175,36 @@ function getBlockStyle(block) {
     }
 }
 
+const InfoPanel = styled.div`
+    background-color: #f1f2f3;
+    width: 100%;
+    padding: 5px;
+    text-align: right;
+`;
+
+const ItemRaw = styled.div`
+    width: 350px;
+    display: none;
+    position: absolute;
+    right: 5px;
+    top: 15px;
+    padding: 10px;
+    background-color: #f1f2f3;
+    text-align: left;
+    border: solid 1px #ccc;
+    border-radius: 5px;
+`;
+
+const InfoIcon = styled.i`
+    cursor: pointer;
+    width: 20px;
+    margin-right: 10px;
+    text-align: center;
+    color: #828282;
+    font-size: 10pt;
+    position: relative;
+
+    &:hover ${ItemRaw} {
+        display: block;
+    }
+`;

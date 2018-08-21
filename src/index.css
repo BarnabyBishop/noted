@@ -1,7 +1,7 @@
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
 }
 
 .icon-search {
@@ -22,13 +22,6 @@ body {
     height: 50px;
 }
 
-.filters {
-    background-color: #4990fe;
-    color: #fff;
-    height: 100%;
-    vertical-align: middle;
-}
-
 .card {
     box-shadow: 0px 0px 5px 0px #e8e8e8;
 }
@@ -40,7 +33,7 @@ body {
 
 .column-right {
     width: calc(100% - 270px);
-    min-width:375px;
+    min-width: 375px;
     display: inline-block;
 }
 
@@ -61,5 +54,4 @@ body {
     textarea.list-text-input {
         font-size: 16px;
     }
-
 }
