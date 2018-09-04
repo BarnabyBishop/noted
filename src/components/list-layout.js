@@ -13,7 +13,7 @@ export default ({ actions, list, tags, tag, date, search, selectedListItem, load
                 <TagPicker actions={actions} tags={tags} currentTag={tag} />
                 <DatePicker actions={actions} filterType={filterType} currentDate={date} />
             </Filters>
-            <Search actions={actions} list={list} search={search} />
+            <Search actions={actions} list={list} selectedSearch={search} />
             <List
                 actions={actions}
                 list={list}

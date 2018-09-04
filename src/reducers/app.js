@@ -27,6 +27,7 @@ const app = (state = initialState, action) => {
         case 'GOT_LIST':
             return {
                 ...state,
+                selectedListItemId: action.list && action.list.length && action.list[0].id,
                 loading: false
             };
         case 'SET_DATE':

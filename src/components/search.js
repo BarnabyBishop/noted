@@ -2,9 +2,26 @@ import React, { Component } from 'react';
 import './search.css';
 
 export default class Search extends Component {
-    onChange(e) {
-        this.props.actions.setSearch(e.target.value);
+    state = {
+        term: ''
+    };
+
+    componentWillReceiveProps(nextProps) {
+        if (this.state.term && !nextProps.selectedSearch) {
+            this.setState({ term: '' });
+        }
     }
+
+    onChange(e) {
+        this.setState({ term: e.target.value });
+    }
+
+    onKeyUp(e) {
+        if (e.keyCode === 13 && this.state.term) {
+            this.props.actions.setSearch(this.state.term);
+        }
+    }
+
     render() {
         return (
             <div className="search">
@@ -13,7 +30,8 @@ export default class Search extends Component {
                     className="search--input"
                     type="text"
                     onChange={this.onChange.bind(this)}
-                    value={this.props.search}
+                    onKeyUp={this.onKeyUp.bind(this)}
+                    value={this.state.term}
                 />
             </div>
         );

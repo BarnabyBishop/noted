@@ -5,12 +5,6 @@ export default store => next => async action => {
         return next(action);
     }
 
-    // Only search if there are at least two characters to search, otherwise there
-    // are too many results (at least until search paging is implemented)
-    if (action.type === 'SET_SEARCH' && (!action.term || action.term.length < 2)) {
-        return next(action);
-    }
-
     // Set date in app reducer
     next(action);
 

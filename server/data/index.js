@@ -84,7 +84,8 @@ export default dbHost => {
                     where: {
                         $or: [{ title: { $ilike: `%${args.term}%` } }, { text: { $ilike: `%${args.term}%` } }],
                         $and: { user_id: args.userId }
-                    }
+                    },
+                    order: [['completed', 'DESC'], 'sort_order']
                 });
             },
             itemByDate(_, args) {
@@ -98,7 +99,8 @@ export default dbHost => {
                             [{ created: { $lte: startOfDay } }, { completed: null }]
                         ],
                         $and: { user_id: args.userId }
-                    }
+                    },
+                    order: [['completed', 'DESC'], 'sort_order']
                 });
             },
             async tags(_, args) {
