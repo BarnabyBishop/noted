@@ -186,7 +186,7 @@ function getBlockStyle(block) {
 }
 
 const InfoPanel = styled.div`
-    background-color: #f1f2f3;
+    border-top: solid 1px #e5e5e5;
     width: 100%;
     padding: 5px;
     display: flex;
