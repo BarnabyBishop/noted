@@ -30,10 +30,10 @@ class List extends Component {
     }
 
     addNextItem(id) {
-        const { list } = this.props;
-        const currentItem = _.find(list, { id });
-        const currentIndex = list.indexOf(currentItem);
-        const nextItem = list[currentIndex + 1];
+        const sortedList = this.getSortedList();
+        const currentItem = _.find(sortedList, { id });
+        const currentIndex = sortedList.indexOf(currentItem);
+        const nextItem = sortedList[currentIndex + 1];
         const middleIndex = getMiddleSortOrder(currentItem && currentItem.sortOrder, nextItem && nextItem.sortOrder);
         this.addItem(null, middleIndex);
     }
@@ -62,22 +62,22 @@ class List extends Component {
         this.props.actions.saveListItem(id);
     }
 
-    // getSortedList() {
-    //     // Create copy of array as redux state is immutable and sort it
-    //     return Array.from(this.props.list).sort((a, b) => {
-    //         if (!!a.completed === !!b.completed) {
-    //             // If both items are completed sort them in the order
-    //             // in which they were completed
-    //             if (a.completed) {
-    //                 return a.completed - b.completed;
-    //             }
-    //             // If they aren't completed sort by their sort order
-    //             return a.sortOrder - b.sortOrder;
-    //         }
-    //         // If they have different completed statuses sort by if they are completed or not.
-    //         return a.completed ? 1 : -1;
-    //     });
-    // }
+    getSortedList() {
+        // Create copy of array as redux state is immutable and sort it
+        return Array.from(this.props.list).sort((a, b) => {
+            if (!!a.completed === !!b.completed) {
+                // If both items are completed sort them in the order
+                // in which they were completed
+                if (a.completed) {
+                    return a.completed - b.completed;
+                }
+                // If they aren't completed sort by their sort order
+                return a.sortOrder - b.sortOrder;
+            }
+            // If they have different completed statuses sort by if they are completed or not.
+            return a.completed ? 1 : -1;
+        });
+    }
 
     onDragEnd(result) {
         // dropped outside the list
@@ -89,11 +89,11 @@ class List extends Component {
         const movingUp = sourceIndex - destinationIndex > 0;
         const prevIndex = movingUp ? destinationIndex - 1 : destinationIndex;
         const nextIndex = movingUp ? destinationIndex : destinationIndex + 1;
-        const { list } = this.props;
-        const currentItem = list[sourceIndex];
+        const sortedList = this.getSortedList();
+        const currentItem = sortedList[sourceIndex];
         const currentId = currentItem.id;
-        const newPositionItem = list[prevIndex];
-        const nextPositionItem = list[nextIndex];
+        const newPositionItem = sortedList[prevIndex];
+        const nextPositionItem = sortedList[nextIndex];
         const middleSortOrder = getMiddleSortOrder(
             newPositionItem && newPositionItem.sortOrder,
             nextPositionItem && nextPositionItem.sortOrder
@@ -109,14 +109,14 @@ class List extends Component {
     render() {
         if (!this.props.list || this.props.loading) return <Loader />;
 
-        const { list } = this.props;
+        const sortedList = this.getSortedList();
         const { selectedListItem } = this.props;
         return (
             <DragDropContext onDragEnd={this.onDragEnd.bind(this)}>
                 <Droppable droppableId="droppable">
                     {(provided, snapshot) => (
                         <div className="list" ref={provided.innerRef}>
-                            {list.map((item, index) => (
+                            {sortedList.map((item, index) => (
                                 <Draggable key={item.id} draggableId={item.id} index={index}>
                                     {(provided, snapshot) => (
                                         <div className="list-item-container">
