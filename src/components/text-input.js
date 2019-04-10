@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import classnames from 'classnames';
 
 class TextInput extends Component {
@@ -85,16 +85,5 @@ class TextInput extends Component {
         );
     }
 }
-
-TextInput.propTypes = {
-    onSave: PropTypes.func,
-    text: PropTypes.string,
-    index: PropTypes.number,
-    height: PropTypes.number,
-    placeholder: PropTypes.string,
-    editing: PropTypes.bool,
-    autoFocus: PropTypes.bool,
-    newText: PropTypes.bool
-};
 
 export default TextInput;

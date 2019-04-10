@@ -13,8 +13,8 @@
 }
 
 .list-item--selected {
-    border-left: solid 2px #52bdff;
-    padding-left: 7px;
+    border-left: solid 4px #4990fe;
+    padding-left: 5px;
 }
 
 .list-item-container:first-of-type .list-item {
