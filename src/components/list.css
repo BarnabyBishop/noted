@@ -44,6 +44,7 @@
     font-size: 14px;
     width: 75%;
     background-color: transparent;
+    font-family: 'Open Sans', sans-serif;
 }
 
 .list-checkbox-input {
@@ -105,8 +106,8 @@
 .list-info .info-details {
     display: none;
 }
-
+/*
 .list-info-visible .info-details {
     display: block;
     font-family: monospace;
-}
+} */

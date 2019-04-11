@@ -16,13 +16,7 @@
     color: #999;
 }
 
-.DraftEditor-root {
+[data-slate-editor='true'] {
     min-height: 500px;
     padding: 10px;
-}
-
-.DraftEditor-root h1,
-.DraftEditor-root h2,
-.DraftEditor-root h3 {
-    margin: 5px 0;
 }
