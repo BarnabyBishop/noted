@@ -57,6 +57,16 @@ const app = (state = initialState, action) => {
                 ...state,
                 selectedListItemId: action.itemId
             };
+        case 'SET_MODAL_ACTIVE':
+            return {
+                ...state,
+                modalActive: true
+            };
+        case 'SET_MODAL_DEACTIVE':
+            return {
+                ...state,
+                modalActive: false
+            };
         case 'LOGGING_IN':
             return {
                 ...state,

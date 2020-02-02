@@ -18,6 +18,15 @@ export const setSelectedListItem = itemId => ({
     itemId
 });
 
+export const setModalActive = itemId => ({
+    type: 'SET_MODAL_ACTIVE',
+    itemId
+});
+
+export const setModalDeactive = () => ({
+    type: 'SET_MODAL_DEACTIVE'
+});
+
 export const setAuthToken = authToken => ({
     type: 'SET_AUTH_TOKEN',
     authToken

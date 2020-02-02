@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import classnames from 'classnames';
+import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { getMiddleSortOrder } from '../utils/sort-utils';
 import TextInput from './text-input';
@@ -106,6 +107,11 @@ class List extends Component {
         this.setState({ infoVisible: !this.state.infoVisible });
     }
 
+    editItem(id) {
+        this.props.actions.setSelectedListItem(id);
+        this.props.actions.setModalActive();
+    }
+
     render() {
         if (!this.props.list || this.props.loading) return <Loader />;
 
@@ -119,7 +125,7 @@ class List extends Component {
                             {sortedList.map((item, index) => (
                                 <Draggable key={item.id} draggableId={item.id} index={index}>
                                     {(provided, snapshot) => (
-                                        <div className="list-item-container">
+                                        <ListItemContainer>
                                             <div
                                                 ref={provided.innerRef}
                                                 style={provided.draggableStyle}
@@ -154,9 +160,14 @@ class List extends Component {
                                                     onSave={title => this.saveItem(item.id, title)}
                                                     onFocus={this.focusItem.bind(this, item.id)}
                                                 />
+                                                <EditButton
+                                                    onClick={() => this.editItem(item.id)}
+                                                    className="fas fa-pencil-alt"
+                                                />
+                                                <MoveButton className="fas fa-bars" />
                                             </div>
                                             {provided.placeholder}
-                                        </div>
+                                        </ListItemContainer>
                                     )}
                                 </Draggable>
                             ))}
@@ -168,5 +179,28 @@ class List extends Component {
         );
     }
 }
+
+const EditButton = styled.i`
+    color: #aaa;
+    display: none;
+    @media (max-width: 420px) {
+        display: block;
+    }
+`;
+
+const MoveButton = styled.i`
+    color: #aaa;
+    display: none;
+    @media (max-width: 420px) {
+        display: block;
+    }
+`;
+
+const ListItemContainer = styled.div`
+    &:first-of-type .list-item {
+        border-top: solid 1px #e5e5e5;
+        margin-top: 1px;
+    }
+`;
 
 export default List;

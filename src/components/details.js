@@ -15,12 +15,10 @@ export default class Details extends Component {
 
         const { id, title, height, completed, created, sortOrder, createdAt, updatedAt } = this.props.selectedListItem;
 
-        // const { editorState } = this.state;
-
         return (
-            <div className="details">
+            <DetailsContainer modalActive={this.props.modalActive}>
                 <InfoPanel>
-                    <InfoUpdatedAt>{updatedAt && `Saved ${moment().to(updatedAt)}`}</InfoUpdatedAt>
+                    <InfoUpdatedAt>{`${title} - ${updatedAt && `Saved ${moment().to(updatedAt)}`}`}</InfoUpdatedAt>
                     <InfoIcon className="fas fa-info">
                         <ItemRaw>
                             <div>id: {id}</div>
@@ -33,19 +31,39 @@ export default class Details extends Component {
                             <div>updatedAt: {updatedAt && updatedAt.toString()}</div>
                         </ItemRaw>
                     </InfoIcon>
+                    <CloseIcon className="fas fa-times" onClick={() => this.props.actions.setModalDeactive()} />
                 </InfoPanel>
                 <div className="RichEditor-root">
                     <div className="RichEditor-editor">
                         <RichEditor selectedListItem={this.props.selectedListItem} actions={this.props.actions} />
                     </div>
                 </div>
-            </div>
+            </DetailsContainer>
         );
     }
 }
 
+const DetailsContainer = styled.div`
+    ${props =>
+        props.modalActive &&
+        `
+            position: absolute;
+            background-color: #ffffff;
+            padding: 5px;
+            width: 90%;
+            left: 5%;
+            height: 90%;
+            top: 5%;
+            border-radius: 10px;
+            box-shadow: #aaa 0px 2px 7px 0px;
+        `}
+`;
+
 const InfoPanel = styled.div`
     border-top: solid 1px #e5e5e5;
+    @media (max-width: 420px) {
+        border: none;
+    }
     width: 100%;
     padding: 5px;
     display: flex;
@@ -75,6 +93,21 @@ const InfoIcon = styled.i`
     position: relative;
 
     &:hover ${ItemRaw} {
+        display: block;
+    }
+
+    @media (max-width: 420px) {
+        display: none;
+    }
+`;
+
+const CloseIcon = styled.i`
+    display: none;
+    width: 50px;
+    font-size: 17pt;
+    text-align: center;
+    color: #aaa;
+    @media (max-width: 420px) {
         display: block;
     }
 `;

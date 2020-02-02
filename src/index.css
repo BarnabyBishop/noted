@@ -37,19 +37,7 @@ body {
     display: inline-block;
 }
 
-@media (max-width: 376px) {
-    .app {
-        width: 750px;
-    }
-
-    .column-left {
-        width: 375px;
-    }
-
-    .column-right {
-        width: 375px;
-    }
-
+@media (max-width: 420px) {
     /* To prevent iOS auto-zoom on input focus */
     textarea.list-text-input {
         font-size: 16px;

@@ -5,20 +5,20 @@
 }
 
 .list-item {
-    display: block;
+    display: grid;
     border: solid 1px #e5e5e5;
     padding: 10px 10px 10px 8px;
     background-color: #fff;
     margin-top: -1px;
+
+    justify-items: center;
+    align-items: center;
+    grid-template-columns: 10% 70% 10% 10%;
 }
 
 .list-item--selected {
     border-left: solid 4px #4990fe;
     padding-left: 5px;
-}
-
-.list-item-container:first-of-type .list-item {
-    border-top: solid 1px #e5e5e5;
 }
 
 .list-item--saving {
@@ -42,7 +42,7 @@
     border: 0;
     display: inline-block;
     font-size: 14px;
-    width: 75%;
+    width: 100%;
     background-color: transparent;
     font-family: 'Open Sans', sans-serif;
 }
@@ -106,8 +106,3 @@
 .list-info .info-details {
     display: none;
 }
-/*
-.list-info-visible .info-details {
-    display: block;
-    font-family: monospace;
-} */

@@ -6,7 +6,7 @@ import List from './list';
 import Details from './details';
 import Search from './search';
 
-export default ({ actions, list, tags, tag, date, search, selectedListItem, loading, filterType }) => {
+export default ({ actions, list, tags, tag, date, search, selectedListItem, loading, filterType, modalActive }) => {
     return (
         <Container>
             <Filters>
@@ -23,7 +23,7 @@ export default ({ actions, list, tags, tag, date, search, selectedListItem, load
                 selectedListItem={selectedListItem}
                 loading={loading}
             />
-            <Details actions={actions} selectedListItem={selectedListItem} />
+            <Details actions={actions} selectedListItem={selectedListItem} modalActive={modalActive} />
         </Container>
     );
 };
@@ -31,10 +31,9 @@ export default ({ actions, list, tags, tag, date, search, selectedListItem, load
 const Container = styled.div`
     display: grid;
     grid-template-columns: 250px auto;
-    min-width: 750px;
 
-    @media (max-width: 376px) {
-        grid-template-columns: 375px 375px;
+    @media (max-width: 420px) {
+        grid-template-columns: 100%;
     }
 `;
 

@@ -13,6 +13,7 @@ const App = props => {
 const mapStateToProps = state => {
     const selectedListItemId = state.app.selectedListItemId;
     const selectedListItem = selectedListItemId && state.list.find(item => item.id === selectedListItemId);
+
     return {
         date: state.app.date,
         tag: state.app.tag,
@@ -23,7 +24,8 @@ const mapStateToProps = state => {
         selectedListItem,
         loading: state.app.loading,
         authorized: !!state.app.authToken,
-        loginStatus: state.app.loginStatus
+        loginStatus: state.app.loginStatus,
+        modalActive: state.app.modalActive
     };
 };
 
@@ -31,7 +33,4 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators({ ...listActions, ...appActions }, dispatch)
 });
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
