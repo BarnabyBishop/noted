@@ -12,7 +12,7 @@ import getUnAuthRouter from './routes/routes-unauth';
 import initData from './data';
 
 const DEFAULT_NODE_PORT = process.env.NODE_PORT || 4321;
-const data = initData(process.env.DB_HOST);
+const data = initData({ host: process.env.DB_HOST, database: process.env.DATABASE });
 
 const app = express();
 
