@@ -54,7 +54,7 @@ const DetailsContainer = styled.div`
             left: 5%;
             height: 90%;
             top: 5%;
-            border-radius: 10px;
+            border-radius: 5px;
             box-shadow: #aaa 0px 2px 7px 0px;
         `}
 `;
