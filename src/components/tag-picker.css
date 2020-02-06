@@ -10,12 +10,16 @@
 
 .tags-picker--list {
     position: absolute;
-    background-color: #4990fe;
+    color: #4990fe;
+    background-color: #fff;
+    max-width: 200px;
+    overflow: hidden;
     padding: 10px;
     top: 40px;
     left: -100%;
     transition: left 0.25s;
-    z-index: 1;
+    z-index: 5;
+    box-shadow: rgba(170, 170, 170, 0.4) 2px 7px 8px 0px;
 }
 
 .tags-picker--list-active {

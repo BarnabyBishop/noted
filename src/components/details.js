@@ -19,7 +19,7 @@ export default class Details extends Component {
             <DetailsContainer modalActive={this.props.modalActive}>
                 <InfoPanel>
                     <InfoUpdatedAt>{`${title} - ${updatedAt && `Saved ${moment().to(updatedAt)}`}`}</InfoUpdatedAt>
-                    <InfoIcon className="fas fa-info">
+                    <InfoIcon>
                         <ItemRaw>
                             <div>id: {id}</div>
                             <div>title: {title}</div>
@@ -33,22 +33,23 @@ export default class Details extends Component {
                     </InfoIcon>
                     <CloseIcon className="fas fa-times" onClick={() => this.props.actions.setModalDeactive()} />
                 </InfoPanel>
-                <div className="RichEditor-root">
-                    <div className="RichEditor-editor">
-                        <RichEditor selectedListItem={this.props.selectedListItem} actions={this.props.actions} />
-                    </div>
-                </div>
+                <EditorContainer>
+                    <RichEditor selectedListItem={this.props.selectedListItem} actions={this.props.actions} />
+                </EditorContainer>
             </DetailsContainer>
         );
     }
 }
 
 const DetailsContainer = styled.div`
+    background-color: #f5f5f5;
+    padding: 10px 20px;
+    border-radius: 10px 0px 0px 0px;
+    box-shadow: inset rgba(170, 170, 170, 0.4) 1px 1px 5px 0px;
     ${props =>
         props.modalActive &&
         `
             position: absolute;
-            background-color: #ffffff;
             padding: 5px;
             width: 90%;
             left: 5%;
@@ -56,16 +57,20 @@ const DetailsContainer = styled.div`
             top: 5%;
             border-radius: 5px;
             box-shadow: #aaa 0px 2px 7px 0px;
-        `}
+        `};
+`;
+
+const EditorContainer = styled.div`
+    background-color: #ffffff;
+    border-radius: 10px;
 `;
 
 const InfoPanel = styled.div`
-    border-top: solid 1px #e5e5e5;
     @media (max-width: 420px) {
         border: none;
     }
     width: 100%;
-    padding: 5px;
+    padding: 5px 5px 10px 5px;
     display: flex;
     justify-content: space-between;
 `;
@@ -81,19 +86,24 @@ const ItemRaw = styled.div`
     text-align: left;
     border: solid 1px #ccc;
     border-radius: 5px;
+    z-index: 100;
 `;
 
-const InfoIcon = styled.i`
+const InfoIcon = styled.span`
     cursor: pointer;
     width: 20px;
     margin-right: 10px;
     text-align: center;
     color: #828282;
-    font-size: 10pt;
+    font-size: 8pt;
     position: relative;
 
     &:hover ${ItemRaw} {
         display: block;
+    }
+
+    &:before {
+        content: 'i';
     }
 
     @media (max-width: 420px) {

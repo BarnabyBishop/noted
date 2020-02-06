@@ -125,7 +125,7 @@ class List extends Component {
                             {sortedList.map((item, index) => (
                                 <Draggable key={item.id} draggableId={item.id} index={index}>
                                     {(provided, snapshot) => (
-                                        <ListItemContainer>
+                                        <div>
                                             <div
                                                 ref={provided.innerRef}
                                                 style={provided.draggableStyle}
@@ -164,10 +164,10 @@ class List extends Component {
                                                     onClick={() => this.editItem(item.id)}
                                                     className="fas fa-pencil-alt"
                                                 />
-                                                <MoveButton className="fas fa-bars" />
+                                                <MoveButton className="fas fa-bars" onClick={e => e.preventDefault()} />
                                             </div>
                                             {provided.placeholder}
-                                        </ListItemContainer>
+                                        </div>
                                     )}
                                 </Draggable>
                             ))}
@@ -193,13 +193,6 @@ const MoveButton = styled.i`
     display: none;
     @media (max-width: 420px) {
         display: block;
-    }
-`;
-
-const ListItemContainer = styled.div`
-    &:first-of-type .list-item {
-        border-top: solid 1px #e5e5e5;
-        margin-top: 1px;
     }
 `;
 

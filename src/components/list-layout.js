@@ -38,8 +38,8 @@ const Container = styled.div`
 `;
 
 const Filters = styled.div`
-    background-color: #4990fe;
-    color: #fff;
+    color: #4990fe;
+    background-color: #fff;
     height: 100%;
     vertical-align: middle;
 `;

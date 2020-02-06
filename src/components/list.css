@@ -6,11 +6,8 @@
 
 .list-item {
     display: grid;
-    border: solid 1px #e5e5e5;
-    padding: 10px 10px 10px 8px;
+    padding: 5px 10px 10px 8px;
     background-color: #fff;
-    margin-top: -1px;
-
     justify-items: center;
     align-items: center;
     grid-template-columns: 10% 70% 10% 10%;
@@ -45,6 +42,7 @@
     width: 100%;
     background-color: transparent;
     font-family: 'Open Sans', sans-serif;
+    border-bottom: solid 1px #e5e5e5;
 }
 
 .list-checkbox-input {
