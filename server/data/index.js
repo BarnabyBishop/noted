@@ -2,8 +2,8 @@ import Sequelize from 'sequelize';
 import moment from 'moment';
 import { makeExecutableSchema } from 'graphql-tools';
 
-export default ({ host, database }) => {
-    const sequelize = new Sequelize({ host, database, dialect: 'postgres' });
+export default ({ host, username, password, database }) => {
+    const sequelize = new Sequelize({ host, database, username, password, dialect: 'postgres' });
     const ListItem = sequelize.define('list_item', {
         id: {
             type: Sequelize.UUID,
