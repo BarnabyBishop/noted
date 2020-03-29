@@ -12,4 +12,3 @@ export default store => next => async action => {
 
     return next({ type: 'GET_TAGS_FAILED' });
 };
-

@@ -49,6 +49,29 @@ export default ({ host, username, password, database }) => {
         }
     });
 
+    const Tag = sequelize.define('tag', {
+        id: {
+            type: Sequelize.UUID,
+            defaultValue: Sequelize.UUIDV4,
+            primaryKey: true
+        },
+        tagName: {
+            type: Sequelize.TEXT,
+            field: 'tag_name'
+        },
+        icon: {
+            type: Sequelize.TEXT
+        },
+        todo: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false
+        },
+        sortOrder: {
+            type: Sequelize.INTEGER,
+            field: 'sort_order'
+        }
+    });
+
     // The GraphQL schema in string form
     const typeDefs = `
         type ListItem {
@@ -63,7 +86,10 @@ export default ({ host, username, password, database }) => {
             updatedAt: String
         }
         type Tag {
-            tag: String
+            tagName: String
+            icon: String
+            todo: Boolean
+            sortOrder: Int
         }
         type Query {
             allItems: [ListItem]
@@ -77,7 +103,7 @@ export default ({ host, username, password, database }) => {
     const resolvers = {
         Query: {
             allItems(_, args) {
-                return ListItem.findAll();
+                return ListItem.findAll({ user_id: args.userId });
             },
             itemBySearch(_, args) {
                 return ListItem.findAll({
@@ -104,17 +130,17 @@ export default ({ host, username, password, database }) => {
                 });
             },
             async tags(_, args) {
-                const tags = await ListItem.sequelize.query(
-                    // So close, only match a word boundary, then # then not ^#. or whitespace then match a word, - or /
-                    // Overly matches https://url.com/#10-defining-a-component
-                    "select distinct regexp_matches(text, '\\Y\\#[\\w\\-\\/]+', 'g') as tag from list_items where text ~ '\\Y\\#[^\\#\\s.][\\w\\-\\/]+' and user_id = ? order by tag",
-                    { replacements: [args.userId], type: ListItem.sequelize.QueryTypes.SELECT }
-                );
+                return Tag.findAll({ user_id: args.userId });
+                //.query
+                // So close, only match a word boundary, then # then not ^#. or whitespace then match a word, - or /
+                // Overly matches https://url.com/#10-defining-a-component
+                // "select distinct regexp_matches(text, '\\Y\\#[\\w\\-\\/]+', 'g') as tag from list_items where text ~ '\\Y\\#[^\\#\\s.][\\w\\-\\/]+' and user_id = ? order by tag",
+                // { replacements: [args.userId], type: ListItem.sequelize.QueryTypes.SELECT }
 
                 // This regexp_matches returns a text array which gives us an unfriendly object of nested arrays. Flatten them out
-                return tags.map(item => {
-                    return { tag: item.tag[0] };
-                });
+                // return tags.map(item => {
+                //     return { tag: item.tag[0] };
+                // });
             }
         }
     };

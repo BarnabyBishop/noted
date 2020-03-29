@@ -134,7 +134,10 @@ export async function getTags() {
         query: gql`
             query Query {
                 tags(userId: "${store.getState().app.userId}") {
-                    tag
+                    tagName
+                    icon
+                    todo
+                    sortOrder
                 }
             }
         `

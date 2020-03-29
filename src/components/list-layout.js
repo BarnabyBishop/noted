@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import DatePicker from './date-picker';
-import TagPicker from './tag-picker';
+import TagList from './tag-list';
+import TagButton from './tag-button';
 import List from './list';
 import Details from './details';
 import Search from './search';
 
 export default ({ actions, list, tags, tag, date, search, selectedListItem, loading, filterType, modalActive }) => {
+    const [showTagList, useTagList] = useState(false);
+
     return (
-        <Container>
+        <Container showTagList={showTagList}>
+            <TagList actions={actions} tags={tags} currentTag={tag} />
             <Filters>
-                <TagPicker actions={actions} tags={tags} currentTag={tag} />
+                <TagButton toggleTagList={() => useTagList(!showTagList)} currentTag={tag} />
                 <DatePicker actions={actions} filterType={filterType} currentDate={date} />
             </Filters>
             <Search actions={actions} list={list} selectedSearch={search} />
@@ -30,7 +34,7 @@ export default ({ actions, list, tags, tag, date, search, selectedListItem, load
 
 const Container = styled.div`
     display: grid;
-    grid-template-columns: 250px auto;
+    grid-template-columns: ${p => (p.showTagList ? '200px' : '35px')} 250px auto;
 
     @media (max-width: 420px) {
         grid-template-columns: 100%;
