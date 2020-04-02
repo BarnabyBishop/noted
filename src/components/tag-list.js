@@ -5,14 +5,10 @@ const TagPicker = props => {
     return (
         <Container>
             {props.tags.map((tag, index) => (
-                <div key={tag.tagName + index} onClick={() => props.actions.setTag(tag.tagName)}>
-                    <span>{tag.icon}&nbsp;</span>
-                    {props.currentTag === tag.tagName ? (
-                        <CurrentTag>{tag.tagName}</CurrentTag>
-                    ) : (
-                        <span>{tag.tagName}</span>
-                    )}
-                </div>
+                <Row key={tag.tagName + index} onClick={() => props.actions.setTag(tag.tagName)}>
+                    <Icon selected={props.currentTag === tag.tagName}>{tag.icon}</Icon>
+                    <Tag selected={props.currentTag === tag.tagName}>{tag.tagName}</Tag>
+                </Row>
             ))}
         </Container>
     );
@@ -32,9 +28,18 @@ const Container = styled.div`
     }
 `;
 
-const CurrentTag = styled.span`
-    color: #4990fe;
-    font-weight: bold;
+const Tag = styled.span`
+    ${p => p.selected && `color: #4990fe;`}
+    padding-left: 5px;
+`;
+
+const Row = styled.div`
+    padding: 3px 0px;
+`;
+
+const Icon = styled.span`
+    ${p => p.selected && 'border-bottom: solid 1px #4990fe;'}
+    padding-bottom: 3px;
 `;
 
 export default TagPicker;

@@ -10,8 +10,8 @@ const filterTypes = {
 const initialState = {
     date: new Date().toISOString(),
     search: '',
-    tag: null,
-    filterType: filterTypes.date,
+    tag: '',
+    filterType: filterTypes.tag,
     selectedListItemId: null,
     loading: true,
     authToken: null

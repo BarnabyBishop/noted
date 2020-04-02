@@ -12,7 +12,8 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(
     reducer,
     {}, // no initial state
-    composeEnhancers(applyMiddleware(reduxLogger, login, authToken, getList, getTags, saveListItem))
+    composeEnhancers(applyMiddleware(reduxLogger, login, authToken, getList, getTags, saveListItem)),
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
 export default store;
