@@ -93,7 +93,7 @@ export default ({ host, username, password, database }) => {
         }
         type Query {
             allItems: [ListItem]
-            itemBySearch(userId: ID, term: String): [ListItem],
+            itemBySearch(userId: ID, term: String, fromDate: String): [ListItem],
             itemByDate(userId: ID, date: String): [ListItem],
             tags(userId: ID): [Tag]
         }
@@ -106,11 +106,15 @@ export default ({ host, username, password, database }) => {
                 return ListItem.findAll({ user_id: args.userId });
             },
             itemBySearch(_, args) {
+                const where = {
+                    $or: [{ title: { $ilike: `%${args.term}%` } }, { text: { $ilike: `%${args.term}%` } }],
+                    $and: [{ user_id: args.userId }]
+                };
+                if (args.fromDate) {
+                    where.$and.push({ completed: { $or: [{ $eq: null }, { $gte: args.fromDate }] } });
+                }
                 return ListItem.findAll({
-                    where: {
-                        $or: [{ title: { $ilike: `%${args.term}%` } }, { text: { $ilike: `%${args.term}%` } }],
-                        $and: { user_id: args.userId }
-                    },
+                    where,
                     order: [['completed', 'DESC'], 'sort_order']
                 });
             },

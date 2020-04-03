@@ -63,7 +63,9 @@ class List extends Component {
 
     getSortedList() {
         // Create copy of array as redux state is immutable and sort it
-        return Array.from(this.props.list).sort((a, b) => {
+        const { list } = this.props;
+        let sortedList = Array.from(list);
+        return sortedList.sort((a, b) => {
             if (!!a.completed === !!b.completed) {
                 // If both items are completed sort them in the order
                 // in which they were completed
@@ -113,8 +115,8 @@ class List extends Component {
     render() {
         if (!this.props.list || this.props.loading) return <Loader />;
 
-        const sortedList = this.getSortedList();
         const { selectedListItem, currentTag } = this.props;
+        const sortedList = this.getSortedList();
 
         return (
             <DragDropContext onDragEnd={this.onDragEnd.bind(this)}>
@@ -139,7 +141,7 @@ class List extends Component {
                                                     key={`${item.id}_checkbox`}
                                                     htmlId={`${item.id}_checkbox`}
                                                     checked={!!item.completed}
-                                                    enabled={currentTag.todo}
+                                                    enabled={currentTag && currentTag.todo}
                                                     onChange={() => this.toggleCompleted(item.id)}
                                                 />
 
@@ -151,7 +153,7 @@ class List extends Component {
                                                     height={item.height}
                                                     multiline={item.multiline}
                                                     autoFocus={item.autoFocus}
-                                                    completed={currentTag.todo && !!item.completed}
+                                                    completed={currentTag && currentTag.todo && !!item.completed}
                                                     onChange={(title, createNext, index, height) =>
                                                         this.updateItem(item.id, title, createNext, index, height)
                                                     }

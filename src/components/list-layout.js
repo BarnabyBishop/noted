@@ -9,12 +9,12 @@ import Search from './search';
 
 export default ({ actions, list, tags, tag, date, search, selectedListItem, loading, filterType, modalActive }) => {
     const [showTagList, useTagList] = useState(false);
-
+    const currentTag = tag ? tag.tagName : '';
     return (
         <Container showTagList={showTagList}>
-            <TagList actions={actions} tags={tags} currentTag={tag.tagName} />
+            <TagList actions={actions} tags={tags} currentTag={currentTag} />
             <Filters>
-                <TagButton toggleTagList={() => useTagList(!showTagList)} currentTag={tag.tagName} />
+                <TagButton toggleTagList={() => useTagList(!showTagList)} currentTag={currentTag} />
                 <DatePicker actions={actions} filterType={filterType} currentDate={date} />
             </Filters>
             <Search actions={actions} list={list} selectedSearch={search} />

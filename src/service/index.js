@@ -48,7 +48,18 @@ const client = new ApolloClient({
             uri: '/api/graphql'
         })
     ]),
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
+    defaultOptions: {
+        // When save items is a mutation remove these cache disabling options
+        watchQuery: {
+            fetchPolicy: 'no-cache',
+            errorPolicy: 'ignore'
+        },
+        query: {
+            fetchPolicy: 'no-cache',
+            errorPolicy: 'all'
+        }
+    }
 });
 
 export async function login(email, password) {
@@ -116,11 +127,12 @@ export async function getListByDate(date) {
     return response.data.itemByDate;
 }
 
-export async function getListBySearch(term) {
+export async function getListBySearch(term, fromDate) {
+    const fromDateQuery = fromDate ? `, fromDate: "${fromDate}"` : '';
     const response = await client.query({
         query: gql`
             query Query {
-                itemBySearch(userId: "${store.getState().app.userId}", term: "${term}") {
+                itemBySearch(userId: "${store.getState().app.userId}", term: "${term}"${fromDateQuery}) {
                     ${listItemFields}
                 }
             }

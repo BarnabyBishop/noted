@@ -10,11 +10,17 @@ export default store => next => async action => {
 
     next({ type: 'GETTING_LIST' });
 
-    // SET_SEARCH and SET_TAG call the same search endpoint with the same API
-    const getList = action.type === 'SET_DATE' ? getListByDate : getListBySearch;
-    const value = action.type === 'SET_DATE' ? action.date : action.tag.tagName;
-
-    const data = await getList(value);
+    let data;
+    if (action.type === 'SET_DATE') {
+        data = await getListByDate(action.date);
+    } else if (action.type === 'SET_TAG' && action.tag) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const fromDate = action.tag.todo ? today.toISOString() : '';
+        data = await getListBySearch(action.tag.tagName, fromDate);
+    } else {
+        data = await getListBySearch(action.term);
+    }
     if (data) {
         return next({ type: 'GOT_LIST', list: data });
     }
