@@ -12,7 +12,7 @@ export default store => next => async action => {
 
     // SET_SEARCH and SET_TAG call the same search endpoint with the same API
     const getList = action.type === 'SET_DATE' ? getListByDate : getListBySearch;
-    const value = action.type === 'SET_DATE' ? action.date : action.term;
+    const value = action.type === 'SET_DATE' ? action.date : action.tag.tagName;
 
     const data = await getList(value);
     if (data) {

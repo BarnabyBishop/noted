@@ -8,9 +8,9 @@ export const setSearch = term => ({
     term
 });
 
-export const setTag = term => ({
+export const setTag = tag => ({
     type: 'SET_TAG',
-    term
+    tag
 });
 
 export const setSelectedListItem = itemId => ({

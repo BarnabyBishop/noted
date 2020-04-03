@@ -5,7 +5,7 @@ const TagPicker = props => {
     return (
         <Container>
             {props.tags.map((tag, index) => (
-                <Row key={tag.tagName + index} onClick={() => props.actions.setTag(tag.tagName)}>
+                <Row key={tag.tagName + index} onClick={() => props.actions.setTag(tag)}>
                     <Icon selected={props.currentTag === tag.tagName}>{tag.icon}</Icon>
                     <Tag selected={props.currentTag === tag.tagName}>{tag.tagName}</Tag>
                 </Row>
@@ -51,7 +51,7 @@ const Row = styled.div`
 `;
 
 const Icon = styled.span`
-    ${p => p.selected && 'border-bottom: solid 1px #4990fe;'}
+    ${p => p.selected && 'border-bottom: solid 2px #4990fe;'}
     padding-bottom: 3px;
 `;
 

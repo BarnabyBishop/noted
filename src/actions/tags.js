@@ -1,3 +1,4 @@
-export const getTags = () => ({
-    type: 'GET_TAGS'
+export const getTags = initial => ({
+    type: 'GET_TAGS',
+    initial
 });

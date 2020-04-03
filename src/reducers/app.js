@@ -48,7 +48,7 @@ const app = (state = initialState, action) => {
         case 'SET_TAG':
             return {
                 ...state,
-                tag: action.term,
+                tag: action.tag,
                 filterType: 'tag',
                 search: ''
             };

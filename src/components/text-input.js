@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import classnames from 'classnames';
+import styled from 'styled-components';
 
 class TextInput extends Component {
     constructor(props) {
@@ -66,13 +66,10 @@ class TextInput extends Component {
         const autoFocus = !this.props.text;
         const text = this.props.text === null ? '' : this.props.text;
         return (
-            <textarea
-                className={classnames({
-                    edit: this.props.editing,
-                    'list-text-input': 'list-text-input'
-                })}
+            <TextArea
                 type="text"
                 placeholder={this.props.placeholder}
+                completed={this.props.completed}
                 autoFocus={autoFocus}
                 value={text}
                 onChange={this.handleChange.bind(this)}
@@ -86,4 +83,17 @@ class TextInput extends Component {
     }
 }
 
+const TextArea = styled.textarea`
+    resize: none;
+    outline: none;
+    border: 0;
+    display: inline-block;
+    font-size: 14px;
+    width: 100%;
+    background-color: transparent;
+    font-family: 'Open Sans', sans-serif;
+    border-bottom: solid 1px #e5e5e5;
+
+    ${p => p.completed && `color: #888;`}
+`;
 export default TextInput;

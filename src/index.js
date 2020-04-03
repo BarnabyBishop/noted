@@ -11,8 +11,7 @@ import './index.css';
 const init = async () => {
     // Get initial data
     store.dispatch(setAuthToken(getAuthStorage()));
-    store.dispatch(setTag('#today'));
-    store.dispatch(getTagsAction());
+    store.dispatch(getTagsAction({ initial: true }));
 
     render(
         <Provider store={store}>

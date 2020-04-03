@@ -12,9 +12,9 @@ export default ({ actions, list, tags, tag, date, search, selectedListItem, load
 
     return (
         <Container showTagList={showTagList}>
-            <TagList actions={actions} tags={tags} currentTag={tag} />
+            <TagList actions={actions} tags={tags} currentTag={tag.tagName} />
             <Filters>
-                <TagButton toggleTagList={() => useTagList(!showTagList)} currentTag={tag} />
+                <TagButton toggleTagList={() => useTagList(!showTagList)} currentTag={tag.tagName} />
                 <DatePicker actions={actions} filterType={filterType} currentDate={date} />
             </Filters>
             <Search actions={actions} list={list} selectedSearch={search} />

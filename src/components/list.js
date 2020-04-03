@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import classnames from 'classnames';
 import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { getMiddleSortOrder } from '../utils/sort-utils';
 import TextInput from './text-input';
 import Checkbox from './checkbox';
-import './list.css';
 import Loader from './loader';
 
 class List extends Component {
@@ -23,7 +21,7 @@ class List extends Component {
         let createdDate,
             text = null;
         if (filterType === 'tag') {
-            text = '\n' + currentTag;
+            text = '\n' + currentTag.tagName;
         } else {
             createdDate = currentDate;
         }
@@ -116,36 +114,35 @@ class List extends Component {
         if (!this.props.list || this.props.loading) return <Loader />;
 
         const sortedList = this.getSortedList();
-        const { selectedListItem } = this.props;
+        const { selectedListItem, currentTag } = this.props;
+
         return (
             <DragDropContext onDragEnd={this.onDragEnd.bind(this)}>
                 <Droppable droppableId="droppable">
-                    {(provided, snapshot) => (
-                        <div className="list" ref={provided.innerRef}>
+                    {provided => (
+                        <ListContainer innerRef={provided.innerRef}>
                             {sortedList.map((item, index) => (
                                 <Draggable key={item.id} draggableId={item.id} index={index}>
-                                    {(provided, snapshot) => (
+                                    {provided => (
                                         <div>
-                                            <div
-                                                ref={provided.innerRef}
+                                            <ListItem
+                                                innerRef={provided.innerRef}
                                                 style={provided.draggableStyle}
                                                 key={`${item.id}_list-item`}
-                                                className={classnames({
-                                                    'list-item': 'list-item',
-                                                    'list-item--saving': item.saving,
-                                                    'list-item--completed': item.completed,
-                                                    'list-item--selected':
-                                                        selectedListItem && selectedListItem.id === item.id
-                                                })}
                                                 {...provided.draggableProps}
                                                 {...provided.dragHandleProps}
+                                                saving={item.saving}
+                                                completed={item.completed}
+                                                selected={selectedListItem && selectedListItem.id === item.id}
                                             >
                                                 <Checkbox
                                                     key={`${item.id}_checkbox`}
                                                     htmlId={`${item.id}_checkbox`}
                                                     checked={!!item.completed}
+                                                    enabled={currentTag.todo}
                                                     onChange={() => this.toggleCompleted(item.id)}
                                                 />
+
                                                 <TextInput
                                                     key={`${item.id}_text-input`}
                                                     id={item.id}
@@ -154,6 +151,7 @@ class List extends Component {
                                                     height={item.height}
                                                     multiline={item.multiline}
                                                     autoFocus={item.autoFocus}
+                                                    completed={currentTag.todo && !!item.completed}
                                                     onChange={(title, createNext, index, height) =>
                                                         this.updateItem(item.id, title, createNext, index, height)
                                                     }
@@ -165,20 +163,59 @@ class List extends Component {
                                                     className="fas fa-pencil-alt"
                                                 />
                                                 <MoveButton className="fas fa-bars" onClick={e => e.preventDefault()} />
-                                            </div>
+                                            </ListItem>
                                             {provided.placeholder}
                                         </div>
                                     )}
                                 </Draggable>
                             ))}
                             {provided.placeholder}
-                        </div>
+                        </ListContainer>
                     )}
                 </Droppable>
             </DragDropContext>
         );
     }
 }
+
+const ListContainer = styled.div`
+    width: 100%;
+    display: inline-block;
+    vertical-align: top;
+`;
+
+const ListItem = styled.div`
+    display: grid;
+    padding: 5px 10px 10px 8px;
+    background-color: #fff;
+    justify-items: center;
+    align-items: center;
+    grid-template-columns: 10% 70% 10% 10%;
+
+    ${p =>
+        p.selected &&
+        `
+        border-left: solid 4px #4990fe;
+        padding-left: 4px;
+    `}
+
+    ${p =>
+        p.saving &&
+        `
+        background: linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.2) 25%,
+            rgba(0, 0, 0, 0) 25%,
+            rgba(0, 0, 0, 0) 50%,
+            rgba(255, 255, 255, 0.2) 50%,
+            rgba(255, 255, 255, 0.2) 75%,
+            rgba(0, 0, 0, 0) 75%,
+            rgba(0, 0, 0, 0) 0
+        ),
+        rgba(177, 215, 255, 0.5);
+        background-size: 20px 20px;
+    `}
+`;
 
 const EditButton = styled.i`
     color: #aaa;

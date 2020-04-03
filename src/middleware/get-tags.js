@@ -1,4 +1,5 @@
 import { getTags } from '../service';
+import { setTag } from '../actions/app';
 
 export default store => next => async action => {
     if (action.type !== 'GET_TAGS') return next(action);
@@ -7,6 +8,9 @@ export default store => next => async action => {
 
     const data = await getTags();
     if (data) {
+        if (action.initial && data.tags && data.tags.length) {
+            store.dispatch(setTag(data.tags[0]));
+        }
         return next({ type: 'GOT_TAGS', tags: data.tags });
     }
 
