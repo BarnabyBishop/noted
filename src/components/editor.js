@@ -9,7 +9,49 @@ import React from 'react';
  */
 
 // eslint-disable-next-line
-Prism.languages.markdown=Prism.languages.extend("markup",{}),Prism.languages.insertBefore("markdown","prolog",{blockquote:{pattern:/^>(?:[\t ]*>)*/m,alias:"punctuation"},code:[{pattern:/^(?: {4}|\t).+/m,alias:"keyword"},{pattern:/``.+?``|`[^`\n]+`/,alias:"keyword"}],title:[{pattern:/\w+.*(?:\r?\n|\r)(?:==+|--+)/,alias:"important",inside:{punctuation:/==+$|--+$/}},{pattern:/(^\s*)#+.+/m,lookbehind:!0,alias:"important",inside:{punctuation:/^#+|#+$/}}],hr:{pattern:/(^\s*)([*-])([\t ]*\2){2,}(?=\s*$)/m,lookbehind:!0,alias:"punctuation"},list:{pattern:/(^\s*)(?:[*+-]|\d+\.)(?=[\t ].)/m,lookbehind:!0,alias:"punctuation"},"url-reference":{pattern:/!?\[[^\]]+\]:[\t ]+(?:\S+|<(?:\\.|[^>\\])+>)(?:[\t ]+(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\)))?/,inside:{variable:{pattern:/^(!?\[)[^\]]+/,lookbehind:!0},string:/(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\))$/,punctuation:/^[\[\]!:]|[<>]/},alias:"url"},bold:{pattern:/(^|[^\\])(\*\*|__)(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,lookbehind:!0,inside:{punctuation:/^\*\*|^__|\*\*$|__$/}},italic:{pattern:/(^|[^\\])([*_])(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,lookbehind:!0,inside:{punctuation:/^[*_]|[*_]$/}},url:{pattern:/!?\[[^\]]+\](?:\([^\s)]+(?:[\t ]+"(?:\\.|[^"\\])*")?\)| ?\[[^\]\n]*\])/,inside:{variable:{pattern:/(!?\[)[^\]]+(?=\]$)/,lookbehind:!0},string:{pattern:/"(?:\\.|[^"\\])*"(?=\)$)/}}}}),Prism.languages.markdown.bold.inside.url=Prism.util.clone(Prism.languages.markdown.url),Prism.languages.markdown.italic.inside.url=Prism.util.clone(Prism.languages.markdown.url),Prism.languages.markdown.bold.inside.italic=Prism.util.clone(Prism.languages.markdown.italic),Prism.languages.markdown.italic.inside.bold=Prism.util.clone(Prism.languages.markdown.bold); // prettier-ignore
+(Prism.languages.markdown = Prism.languages.extend('markup', {})),
+    Prism.languages.insertBefore('markdown', 'prolog', {
+        blockquote: { pattern: /^>(?:[\t ]*>)*/m, alias: 'punctuation' },
+        code: [{ pattern: /``.+?``|`[^`\n]+`/, alias: 'keyword' }],
+        fence: { pattern: /^ *(`{3,}|~{3,})[ \.]*(\S+)? *\n([\s\S]+?)\s*\1 *(?:\n|$)/m, alias: 'keyword' },
+        title: [
+            { pattern: /\w+.*(?:\r?\n|\r)(?:==+|--+)/, alias: 'important', inside: { punctuation: /==+$|--+$/ } },
+            { pattern: /(^\s*)#+\s.+/m, lookbehind: !0, alias: 'important', inside: { punctuation: /^#+|#+$/ } }
+        ],
+        tag: [{ pattern: /(^\s*)#+.+/m, lookbehind: !0, alias: 'important', inside: { punctuation: /^#+|#+$/ } }],
+        hr: { pattern: /(^\s*)([*-])([\t ]*\2){2,}(?=\s*$)/m, lookbehind: !0, alias: 'punctuation' },
+        list: { pattern: /(^\s*)(?:[*+-]|\d+\.)(?=[\t ].)/m, lookbehind: !0, alias: 'punctuation' },
+        'url-reference': {
+            pattern: /!?\[[^\]]+\]:[\t ]+(?:\S+|<(?:\\.|[^>\\])+>)(?:[\t ]+(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\)))?/,
+            inside: {
+                variable: { pattern: /^(!?\[)[^\]]+/, lookbehind: !0 },
+                string: /(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\))$/,
+                punctuation: /^[\[\]!:]|[<>]/
+            },
+            alias: 'url'
+        },
+        bold: {
+            pattern: /(^|[^\\])(\*{1,2}|__)(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
+            lookbehind: !0,
+            inside: { punctuation: /^\*{1,2}|^__|\*{1,2}$|__$/ }
+        },
+        italic: {
+            pattern: /(^|[^\\])([_])(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
+            lookbehind: !0,
+            inside: { punctuation: /^[_]|[_]$/ }
+        },
+        url: {
+            pattern: /!?\[[^\]]+\](?:\([^\s)]+(?:[\t ]+"(?:\\.|[^"\\])*")?\)| ?\[[^\]\n]*\])/,
+            inside: {
+                variable: { pattern: /(!?\[)[^\]]+(?=\]$)/, lookbehind: !0 },
+                string: { pattern: /"(?:\\.|[^"\\])*"(?=\)$)/ }
+            }
+        }
+    }),
+    (Prism.languages.markdown.bold.inside.url = Prism.util.clone(Prism.languages.markdown.url)),
+    (Prism.languages.markdown.italic.inside.url = Prism.util.clone(Prism.languages.markdown.url)),
+    (Prism.languages.markdown.bold.inside.italic = Prism.util.clone(Prism.languages.markdown.italic)),
+    (Prism.languages.markdown.italic.inside.bold = Prism.util.clone(Prism.languages.markdown.bold));
 
 class RichEditor extends React.Component {
     constructor(props) {
@@ -71,7 +113,18 @@ class RichEditor extends React.Component {
                 return <strong {...attributes}>{children}</strong>;
 
             case 'code':
-                return <code {...attributes}>{children}</code>;
+                return (
+                    <code
+                        style={{
+                            backgroundColor: 'rgb(238, 238, 238)',
+                            fontFamily: 'monospace',
+                            padding: '3px'
+                        }}
+                        {...attributes}
+                    >
+                        {children}
+                    </code>
+                );
 
             case 'italic':
                 return <em {...attributes}>{children}</em>;
@@ -87,6 +140,22 @@ class RichEditor extends React.Component {
                             fontWeight: 'bold',
                             fontSize: '20px',
                             margin: '10px 0 10px 0',
+                            display: 'inline-block'
+                        }}
+                    >
+                        {children}
+                    </span>
+                );
+            }
+
+            case 'tag': {
+                return (
+                    <span
+                        {...attributes}
+                        style={{
+                            fontWeight: 'bold',
+                            fontSize: '16px',
+                            color: '#888',
                             display: 'inline-block'
                         }}
                     >
