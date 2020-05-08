@@ -228,7 +228,7 @@ Lexer.prototype.token = function(src, top, bq) {
             this.tokens.push({
                 type: 'code',
                 lang: cap[2],
-                text: cap[3]
+                text: cap[0]
             });
             continue;
         }
@@ -405,7 +405,10 @@ Lexer.prototype.token = function(src, top, bq) {
         // table (gfm)
         if (top && (cap = this.rules.table.exec(src))) {
             src = src.substring(cap[0].length);
-
+            console.log('0', cap[0]);
+            console.log('1', cap[1]);
+            console.log('2', cap[2]);
+            console.log('3', cap[3]);
             item = {
                 type: 'table',
                 header: splitCells(cap[1].replace(/^ *| *\| *$/g, '')),
