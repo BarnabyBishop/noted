@@ -16,7 +16,7 @@ import React from 'react';
         fence: { pattern: /^ *(`{3,}|~{3,})[ \.]*(\S+)? *\n([\s\S]+?)\s*\1 *(?:\n|$)/m, alias: 'keyword' },
         title: [
             { pattern: /\w+.*(?:\r?\n|\r)(?:==+|--+)/, alias: 'important', inside: { punctuation: /==+$|--+$/ } },
-            { pattern: /(^\s*)#+\s.+/m, lookbehind: !0, alias: 'important', inside: { punctuation: /^#+|#+$/ } }
+            { pattern: /(^\s*)#+\s.+/m, lookbehind: !0, alias: 'important', inside: { punctuation: /^#+|#+$/ } },
         ],
         tag: [{ pattern: /(^\s*)#+.+/m, lookbehind: !0, alias: 'important', inside: { punctuation: /^#+|#+$/ } }],
         hr: { pattern: /(^\s*)([*-])([\t ]*\2){2,}(?=\s*$)/m, lookbehind: !0, alias: 'punctuation' },
@@ -26,27 +26,27 @@ import React from 'react';
             inside: {
                 variable: { pattern: /^(!?\[)[^\]]+/, lookbehind: !0 },
                 string: /(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\((?:\\.|[^)\\])*\))$/,
-                punctuation: /^[\[\]!:]|[<>]/
+                punctuation: /^[\[\]!:]|[<>]/,
             },
-            alias: 'url'
+            alias: 'url',
         },
         bold: {
             pattern: /(^|[^\\])(\*{1,2}|__)(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
             lookbehind: !0,
-            inside: { punctuation: /^\*{1,2}|^__|\*{1,2}$|__$/ }
+            inside: { punctuation: /^\*{1,2}|^__|\*{1,2}$|__$/ },
         },
         italic: {
             pattern: /(^|[^\\])([_])(?:(?:\r?\n|\r)(?!\r?\n|\r)|.)+?\2/,
             lookbehind: !0,
-            inside: { punctuation: /^[_]|[_]$/ }
+            inside: { punctuation: /^[_]|[_]$/ },
         },
         url: {
             pattern: /!?\[[^\]]+\](?:\([^\s)]+(?:[\t ]+"(?:\\.|[^"\\])*")?\)| ?\[[^\]\n]*\])/,
             inside: {
                 variable: { pattern: /(!?\[)[^\]]+(?=\]$)/, lookbehind: !0 },
-                string: { pattern: /"(?:\\.|[^"\\])*"(?=\)$)/ }
-            }
-        }
+                string: { pattern: /"(?:\\.|[^"\\])*"(?=\)$)/ },
+            },
+        },
     }),
     (Prism.languages.markdown.bold.inside.url = Prism.util.clone(Prism.languages.markdown.url)),
     (Prism.languages.markdown.italic.inside.url = Prism.util.clone(Prism.languages.markdown.url)),
@@ -60,9 +60,13 @@ class RichEditor extends React.Component {
         const text = this.props.selectedListItem ? this.props.selectedListItem.text : '';
 
         this.state = {
-            editorState: Plain.deserialize(text)
+            editorState: Plain.deserialize(text),
         };
         this.autosave = null;
+        this.textInput = React.createRef();
+        if (this.props.setTextRef) {
+            this.props.setTextRef(this.textInput);
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -101,6 +105,7 @@ class RichEditor extends React.Component {
                 renderMark={this.renderMark}
                 decorateNode={this.decorateNode}
                 onChange={this.onChange.bind(this)}
+                ref={this.textInput}
             />
         );
     }
@@ -118,7 +123,7 @@ class RichEditor extends React.Component {
                         style={{
                             backgroundColor: 'rgb(238, 238, 238)',
                             fontFamily: 'monospace',
-                            padding: '3px'
+                            padding: '3px',
                         }}
                         {...attributes}
                     >
@@ -140,7 +145,7 @@ class RichEditor extends React.Component {
                             fontWeight: 'bold',
                             fontSize: '20px',
                             margin: '10px 0 10px 0',
-                            display: 'inline-block'
+                            display: 'inline-block',
                         }}
                     >
                         {children}
@@ -154,9 +159,9 @@ class RichEditor extends React.Component {
                         {...attributes}
                         style={{
                             fontWeight: 'bold',
-                            fontSize: '16px',
+                            fontSize: '15px',
                             color: '#888',
-                            display: 'inline-block'
+                            display: 'inline-block',
                         }}
                     >
                         {children}
@@ -179,7 +184,7 @@ class RichEditor extends React.Component {
                         style={{
                             paddingLeft: '10px',
                             lineHeight: '10px',
-                            fontSize: '20px'
+                            fontSize: '20px',
                         }}
                     >
                         {children}
@@ -194,7 +199,7 @@ class RichEditor extends React.Component {
                         style={{
                             borderBottom: '2px solid #000',
                             display: 'block',
-                            opacity: 0.2
+                            opacity: 0.2,
                         }}
                     >
                         {children}
@@ -256,15 +261,15 @@ class RichEditor extends React.Component {
                 const dec = {
                     anchor: {
                         key: startText.key,
-                        offset: startOffset
+                        offset: startOffset,
                     },
                     focus: {
                         key: endText.key,
-                        offset: endOffset
+                        offset: endOffset,
                     },
                     mark: {
-                        type: token.type
-                    }
+                        type: token.type,
+                    },
                 };
 
                 decorations.push(dec);

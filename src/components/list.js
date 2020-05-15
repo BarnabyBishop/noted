@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import styled from 'styled-components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { getMiddleSortOrder } from '../utils/sort-utils';
+import { sortList, getMiddleSortOrder } from '../utils/sort-utils';
 import TextInput from './text-input';
 import Checkbox from './checkbox';
 import Loader from './loader';
@@ -11,7 +11,7 @@ class List extends Component {
     constructor(params) {
         super(params);
         this.state = {
-            infoVisible: false
+            infoVisible: false,
         };
     }
 
@@ -29,7 +29,7 @@ class List extends Component {
     }
 
     addNextItem(id) {
-        const sortedList = this.getSortedList();
+        const sortedList = sortList(this.props.list);
         const currentItem = _.find(sortedList, { id });
         const currentIndex = sortedList.indexOf(currentItem);
         const nextItem = sortedList[currentIndex + 1];
@@ -61,25 +61,6 @@ class List extends Component {
         this.props.actions.saveListItem(id);
     }
 
-    getSortedList() {
-        // Create copy of array as redux state is immutable and sort it
-        const { list } = this.props;
-        let sortedList = Array.from(list);
-        return sortedList.sort((a, b) => {
-            if (!!a.completed === !!b.completed) {
-                // If both items are completed sort them in the order
-                // in which they were completed
-                if (a.completed) {
-                    return a.completed - b.completed;
-                }
-                // If they aren't completed sort by their sort order
-                return a.sortOrder - b.sortOrder;
-            }
-            // If they have different completed statuses sort by if they are completed or not.
-            return a.completed ? 1 : -1;
-        });
-    }
-
     onDragEnd(result) {
         // dropped outside the list
         if (!result.destination) {
@@ -90,7 +71,7 @@ class List extends Component {
         const movingUp = sourceIndex - destinationIndex > 0;
         const prevIndex = movingUp ? destinationIndex - 1 : destinationIndex;
         const nextIndex = movingUp ? destinationIndex : destinationIndex + 1;
-        const sortedList = this.getSortedList();
+        const sortedList = sortList(this.props.list);
         const currentItem = sortedList[sourceIndex];
         const currentId = currentItem.id;
         const newPositionItem = sortedList[prevIndex];
@@ -116,16 +97,16 @@ class List extends Component {
         if (!this.props.list || this.props.loading) return <Loader />;
 
         const { selectedListItem, currentTag } = this.props;
-        const sortedList = this.getSortedList();
+        const sortedList = sortList(this.props.list);
 
         return (
             <DragDropContext onDragEnd={this.onDragEnd.bind(this)}>
                 <Droppable droppableId="droppable">
-                    {provided => (
+                    {(provided) => (
                         <ListContainer innerRef={provided.innerRef}>
                             {sortedList.map((item, index) => (
                                 <Draggable key={item.id} draggableId={item.id} index={index}>
-                                    {provided => (
+                                    {(provided) => (
                                         <div>
                                             <ListItem
                                                 innerRef={provided.innerRef}
@@ -149,6 +130,7 @@ class List extends Component {
                                                     key={`${item.id}_text-input`}
                                                     id={item.id}
                                                     text={item.title}
+                                                    list={true}
                                                     index={index}
                                                     height={item.height}
                                                     multiline={item.multiline}
@@ -157,14 +139,17 @@ class List extends Component {
                                                     onChange={(title, createNext, index, height) =>
                                                         this.updateItem(item.id, title, createNext, index, height)
                                                     }
-                                                    onSave={title => this.saveItem(item.id, title)}
+                                                    onSave={(title) => this.saveItem(item.id, title)}
                                                     onFocus={this.focusItem.bind(this, item.id)}
                                                 />
                                                 <EditButton
                                                     onClick={() => this.editItem(item.id)}
                                                     className="fas fa-pencil-alt"
                                                 />
-                                                <MoveButton className="fas fa-bars" onClick={e => e.preventDefault()} />
+                                                <MoveButton
+                                                    className="fas fa-bars"
+                                                    onClick={(e) => e.preventDefault()}
+                                                />
                                             </ListItem>
                                             {provided.placeholder}
                                         </div>
@@ -194,14 +179,14 @@ const ListItem = styled.div`
     align-items: center;
     grid-template-columns: 10% 70% 10% 10%;
 
-    ${p =>
+    ${(p) =>
         p.selected &&
         `
         border-left: solid 4px #4990fe;
         padding-left: 4px;
     `}
 
-    ${p =>
+    ${(p) =>
         p.saving &&
         `
         background: linear-gradient(
