@@ -8,68 +8,68 @@ export default ({ host, username, password, database }) => {
         id: {
             type: Sequelize.UUID,
             defaultValue: Sequelize.UUIDV4,
-            primaryKey: true
+            primaryKey: true,
         },
         userId: {
             type: Sequelize.UUID,
-            field: 'user_id'
+            field: 'user_id',
         },
         sortOrder: {
             type: Sequelize.INTEGER,
-            field: 'sort_order'
+            field: 'sort_order',
         },
         created: {
-            type: Sequelize.DATE
+            type: Sequelize.DATE,
         },
         completed: {
-            type: Sequelize.DATE
+            type: Sequelize.DATE,
         },
         title: {
-            type: Sequelize.TEXT
+            type: Sequelize.TEXT,
         },
         text: {
-            type: Sequelize.TEXT
+            type: Sequelize.TEXT,
         },
         height: {
-            type: Sequelize.INTEGER
-        }
+            type: Sequelize.INTEGER,
+        },
     });
 
     const User = sequelize.define('user', {
         id: {
             type: Sequelize.UUID,
             defaultValue: Sequelize.UUIDV4,
-            primaryKey: true
+            primaryKey: true,
         },
         email: {
-            type: Sequelize.TEXT
+            type: Sequelize.TEXT,
         },
         password: {
-            type: Sequelize.TEXT
-        }
+            type: Sequelize.TEXT,
+        },
     });
 
     const Tag = sequelize.define('tag', {
         id: {
             type: Sequelize.UUID,
             defaultValue: Sequelize.UUIDV4,
-            primaryKey: true
+            primaryKey: true,
         },
         tagName: {
             type: Sequelize.TEXT,
-            field: 'tag_name'
+            field: 'tag_name',
         },
         icon: {
-            type: Sequelize.TEXT
+            type: Sequelize.TEXT,
         },
         todo: {
             type: Sequelize.BOOLEAN,
-            defaultValue: false
+            defaultValue: false,
         },
         sortOrder: {
             type: Sequelize.INTEGER,
-            field: 'sort_order'
-        }
+            field: 'sort_order',
+        },
     });
 
     // The GraphQL schema in string form
@@ -97,6 +97,9 @@ export default ({ host, username, password, database }) => {
             itemByDate(userId: ID, date: String): [ListItem],
             tags(userId: ID): [Tag]
         }
+        type Mutation {
+            updateItem(id: ID, userId: ID, title: String, text: String, sortOrder: Int, created: String, completed: String): ListItem
+        }
         `;
 
     // The resolvers
@@ -108,14 +111,14 @@ export default ({ host, username, password, database }) => {
             itemBySearch(_, args) {
                 const where = {
                     $or: [{ title: { $ilike: `%${args.term}%` } }, { text: { $ilike: `%${args.term}%` } }],
-                    $and: [{ user_id: args.userId }]
+                    $and: [{ user_id: args.userId }],
                 };
                 if (args.fromDate) {
                     where.$and.push({ completed: { $or: [{ $eq: null }, { $gte: args.fromDate }] } });
                 }
                 return ListItem.findAll({
                     where,
-                    order: [['completed', 'DESC'], 'sort_order']
+                    order: [['completed', 'DESC'], 'sort_order'],
                 });
             },
             itemByDate(_, args) {
@@ -126,11 +129,11 @@ export default ({ host, username, password, database }) => {
                         $or: [
                             { created: { $gte: startOfDay, $lt: endOfDay } },
                             [{ created: { $lte: startOfDay } }, { completed: { $gte: endOfDay } }],
-                            [{ created: { $lte: startOfDay } }, { completed: null }]
+                            [{ created: { $lte: startOfDay } }, { completed: null }],
                         ],
-                        $and: { user_id: args.userId }
+                        $and: { user_id: args.userId },
                     },
-                    order: [['completed', 'DESC'], 'sort_order']
+                    order: [['completed', 'DESC'], 'sort_order'],
                 });
             },
             async tags(_, args) {
@@ -145,14 +148,31 @@ export default ({ host, username, password, database }) => {
                 // return tags.map(item => {
                 //     return { tag: item.tag[0] };
                 // });
-            }
-        }
+            },
+        },
+        Mutation: {
+            updateItem: async (_, { id, title, text, sortOrder, created, completed, userId }) => {
+                if (typeof id === 'undefined') {
+                    throw new Error('You must provide an ID.');
+                }
+
+                console.log(`👨‍🚀 ${title}`);
+                // Save ListItem
+                await ListItem.upsert(
+                    { id, title, text, sortOrder, created, completed, userId: userId },
+                    { where: { id } }
+                );
+
+                // Load updated/inserted ListItem
+                return await ListItem.findById(id);
+            },
+        },
     };
 
     // Put together a schema
     const schema = makeExecutableSchema({
         typeDefs,
-        resolvers
+        resolvers,
     });
 
     return { sequelize, ListItem, User, schema };

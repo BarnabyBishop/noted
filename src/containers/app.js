@@ -6,26 +6,30 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { ApolloProvider } from '@apollo/react-hooks';
+import { client } from '../service';
 import * as listActions from '../actions/list';
 import * as appActions from '../actions/app';
 
 const App = (props) => {
     return (
         <Router>
-            <div className="app">
-                {props.authorized ? (
-                    <Switch>
-                        <Route path="/today">
-                            <Today {...props} />
-                        </Route>
-                        <Route path="/">
-                            <Home {...props} />
-                        </Route>
-                    </Switch>
-                ) : (
-                    <LoginForm {...props} />
-                )}
-            </div>
+            <ApolloProvider client={client}>
+                <div className="app">
+                    {props.authorized ? (
+                        <Switch>
+                            <Route path="/today">
+                                <Today userId={props.userId} actions={props.actions} />
+                            </Route>
+                            <Route path="/">
+                                <Home {...props} />
+                            </Route>
+                        </Switch>
+                    ) : (
+                        <LoginForm {...props} />
+                    )}
+                </div>
+            </ApolloProvider>
         </Router>
     );
 };
@@ -35,6 +39,7 @@ const mapStateToProps = (state) => {
     const selectedListItem = selectedListItemId && state.list.find((item) => item.id === selectedListItemId);
 
     return {
+        userId: state.app.userId,
         date: state.app.date,
         tag: state.app.tag,
         search: state.app.search,

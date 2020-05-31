@@ -64,8 +64,8 @@ class RichEditor extends React.Component {
         };
         this.autosave = null;
         this.textInput = React.createRef();
-        if (this.props.setTextRef) {
-            this.props.setTextRef(this.textInput);
+        if (this.props.registerRef) {
+            this.props.registerRef(this.textInput);
         }
     }
 

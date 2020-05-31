@@ -15,9 +15,9 @@ const middlewareLink = setContext(() => {
 });
 
 const afterwareLink = new ApolloLink((operation, forward) => {
-    return forward(operation).map(response => {
+    return forward(operation).map((response) => {
         const {
-            response: { headers }
+            response: { headers },
         } = operation.getContext();
         if (headers) {
             store.dispatch({ type: 'SET_AUTH_TOKEN', authToken: headers.get('auth-token') });
@@ -27,7 +27,7 @@ const afterwareLink = new ApolloLink((operation, forward) => {
     });
 });
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
     link: ApolloLink.from([
         onError(({ graphQLErrors, networkError }) => {
             if (graphQLErrors)
@@ -45,28 +45,28 @@ const client = new ApolloClient({
         afterwareLink,
         middlewareLink,
         new HttpLink({
-            uri: '/api/graphql'
-        })
+            uri: '/api/graphql',
+        }),
     ]),
     cache: new InMemoryCache(),
     defaultOptions: {
         // When save items is a mutation remove these cache disabling options
         watchQuery: {
             fetchPolicy: 'no-cache',
-            errorPolicy: 'ignore'
+            errorPolicy: 'ignore',
         },
         query: {
             fetchPolicy: 'no-cache',
-            errorPolicy: 'all'
-        }
-    }
+            errorPolicy: 'all',
+        },
+    },
 });
 
 export async function login(email, password) {
     const response = await fetch(`/api/login${location.search}`, {
         method: 'POST',
         headers: new Headers({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
     });
     if (response.status >= 400) {
         if (response.status === 401) {
@@ -83,9 +83,9 @@ export async function saveListItem(listItem) {
         method: 'POST',
         headers: new Headers({
             'Content-Type': 'application/json',
-            authorization: `Bearer ${store.getState().app.authToken}`
+            authorization: `Bearer ${store.getState().app.authToken}`,
         }),
-        body: JSON.stringify(listItem)
+        body: JSON.stringify(listItem),
     });
     if (response.status >= 400) {
         throw new Error('Bad response from server');
@@ -122,7 +122,7 @@ export async function getListByDate(date) {
                     ${listItemFields}
                 }
             }
-        `
+        `,
     });
     return response.data.itemByDate;
 }
@@ -136,7 +136,7 @@ export async function getListBySearch(term, fromDate) {
                     ${listItemFields}
                 }
             }
-        `
+        `,
     });
     return response.data.itemBySearch;
 }
@@ -152,7 +152,7 @@ export async function getTags() {
                     sortOrder
                 }
             }
-        `
+        `,
     });
     return response.data;
 }
