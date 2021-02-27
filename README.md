@@ -6,7 +6,7 @@ Noted combines note taking with a todo app. Allowing daily tasks to be managed a
 
 The note list is orderable and each note has a title and details which can be written in Markdown.
 
-[Noted Homepage](https://raw.githubusercontent.com/BarnabyBishop/noted/master/homepage.png)
+![Noted Homepage](https://raw.githubusercontent.com/BarnabyBishop/noted/master/homepage.png)
 
 ## Tech
 
