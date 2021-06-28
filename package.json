@@ -71,7 +71,7 @@
         "nodemon": "^1.17.4",
         "pg": "^6.1.2",
         "pg-hstore": "^2.3.2",
-        "prismjs": "^1.16.0",
+        "prismjs": "^1.24.0",
         "react": "^16.8.0",
         "react-beautiful-dnd": "^3.0.0",
         "react-dom": "^16.8.0",
